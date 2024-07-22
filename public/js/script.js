@@ -31,7 +31,7 @@
       userAgent: navigator.userAgent,
       timestamp: new Date().toISOString(),
       sessionId: getSessionId(),
-      visitDuration: (Date.now() - startTime) / 1000, // Duration in seconds
+      visitDuration: Date.now() - startTime,
       browser: {
         name: getBrowserName(),
         version: getBrowserVersion(),
@@ -105,7 +105,7 @@
       userAgent: navigator.userAgent,
       timestamp: new Date().toISOString(),
       sessionId: getSessionId(),
-      visitDuration: (Date.now() - startTime) / 1000, // Duration in seconds
+      visitDuration: Date.now() - startTime,
       browser: {
         name: getBrowserName(),
         version: getBrowserVersion(),
