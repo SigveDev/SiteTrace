@@ -1,6 +1,12 @@
 (function () {
   let clickCount = 0;
   let maxScrollDepth = 0;
+  let startTime = Date.now();
+  if (sessionStorage.getItem("startTime")) {
+    startTime = sessionStorage.getItem("startTime");
+  } else {
+    sessionStorage.setItem("startTime", startTime);
+  }
 
   // Event listener for tracking clicks
   document.addEventListener("click", () => {
@@ -97,7 +103,6 @@
     return "Desktop";
   }
 
-  let startTime = Date.now();
   window.addEventListener("beforeunload", function () {
     const payload = {
       url: window.location.href,
