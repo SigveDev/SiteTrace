@@ -2,15 +2,29 @@
   let clickCount = 0;
   let maxScrollDepth = 0;
   let startTime = Date.now();
+
   if (sessionStorage.getItem("startTime")) {
     startTime = sessionStorage.getItem("startTime");
   } else {
     sessionStorage.setItem("startTime", startTime);
   }
 
+  if (sessionStorage.getItem("clickCount")) {
+    clickCount = sessionStorage.getItem("clickCount");
+  } else {
+    sessionStorage.setItem("clickCount", clickCount);
+  }
+
+  if (sessionStorage.getItem("maxScrollDepth")) {
+    maxScrollDepth = sessionStorage.getItem("maxScrollDepth");
+  } else {
+    sessionStorage.setItem("maxScrollDepth", maxScrollDepth);
+  }
+
   // Event listener for tracking clicks
   document.addEventListener("click", () => {
     clickCount++;
+    sessionStorage.setItem("clickCount", clickCount);
   });
 
   // Event listener for tracking scroll depth
@@ -21,6 +35,7 @@
     if (scrollDepth > maxScrollDepth) {
       maxScrollDepth = scrollDepth;
     }
+    sessionStorage.setItem("maxScrollDepth", maxScrollDepth);
   });
 
   function getInteractionsData() {
