@@ -38,13 +38,6 @@
     sessionStorage.setItem("maxScrollDepth", maxScrollDepth);
   });
 
-  function getInteractionsData() {
-    return {
-      clicks: clickCount,
-      scrollDepth: maxScrollDepth,
-    };
-  }
-
   function sendAnalyticsData() {
     const payload = {
       url: window.location.href,
@@ -58,7 +51,8 @@
         version: getBrowserVersion(),
       },
       device: getDeviceType(),
-      interactions: getInteractionsData(), // Capture interaction data
+      clicks: clickCount,
+      scrollDepth: maxScrollDepth,
     };
 
     fetch("https://sitetrace-api.sigve.dev/analytics", {
@@ -131,7 +125,8 @@
         version: getBrowserVersion(),
       },
       device: getDeviceType(),
-      interactions: getInteractionsData(), // Capture interaction data
+      clicks: clickCount,
+      scrollDepth: maxScrollDepth,
     };
 
     navigator.sendBeacon(
