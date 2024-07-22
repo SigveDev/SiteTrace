@@ -76,10 +76,19 @@
   }
 
   function getBrowserVersion() {
-    // Simple browser version detection logic
-    return navigator.userAgent.match(
+    // Define the regular expression to match browser versions
+    const userAgent = navigator.userAgent;
+    const match = userAgent.match(
       /(Chrome|Safari|Firefox|MSIE|Trident\/.*?rv:)(\d+)/
-    )[2];
+    );
+
+    // Check if match is found and return the version
+    if (match) {
+      return match[2];
+    } else {
+      // Return a default value or handle the case where the browser is not recognized
+      return "Unknown";
+    }
   }
 
   function getDeviceType() {
