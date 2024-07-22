@@ -59,7 +59,7 @@
   function getSessionId() {
     let sessionId = sessionStorage.getItem("sessionId");
     if (!sessionId) {
-      sessionId = "sess_" + Math.random().toString(36);
+      sessionId = "sess_" + Math.random().toString(36).substr(2, 12);
       sessionStorage.setItem("sessionId", sessionId);
     }
     return sessionId;
