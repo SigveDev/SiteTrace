@@ -1,0 +1,115 @@
+(function () {
+  let clickCount = 0;
+  let maxScrollDepth = 0;
+
+  // Event listener for tracking clicks
+  document.addEventListener("click", () => {
+    clickCount++;
+  });
+
+  // Event listener for tracking scroll depth
+  window.addEventListener("scroll", () => {
+    const scrolled = window.scrollY + window.innerHeight;
+    const height = document.documentElement.scrollHeight;
+    const scrollDepth = (scrolled / height) * 100;
+    if (scrollDepth > maxScrollDepth) {
+      maxScrollDepth = scrollDepth;
+    }
+  });
+
+  function getInteractionsData() {
+    return {
+      clicks: clickCount,
+      scrollDepth: maxScrollDepth,
+    };
+  }
+
+  function sendAnalyticsData() {
+    const payload = {
+      url: window.location.href,
+      referrer: document.referrer,
+      userAgent: navigator.userAgent,
+      timestamp: new Date().toISOString(),
+      sessionId: getSessionId(),
+      visitDuration: (Date.now() - startTime) / 1000, // Duration in seconds
+      browser: {
+        name: getBrowserName(),
+        version: getBrowserVersion(),
+      },
+      device: getDeviceType(),
+      interactions: getInteractionsData(), // Capture interaction data
+    };
+
+    fetch("https://sitetrace-api.sigve.dev/analytics", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Analytics data sent:", data);
+      })
+      .catch((error) => {
+        console.error("Error sending analytics data:", error);
+      });
+  }
+
+  function getSessionId() {
+    let sessionId = sessionStorage.getItem("sessionId");
+    if (!sessionId) {
+      sessionId = "sess_" + Math.random().toString(36).substr(2, 9);
+      sessionStorage.setItem("sessionId", sessionId);
+    }
+    return sessionId;
+  }
+
+  function getBrowserName() {
+    // Simple browser detection logic
+    if (navigator.userAgent.indexOf("Chrome") !== -1) return "Chrome";
+    if (navigator.userAgent.indexOf("Safari") !== -1) return "Safari";
+    if (navigator.userAgent.indexOf("Firefox") !== -1) return "Firefox";
+    if (navigator.userAgent.indexOf("MSIE") !== -1 || !!document.documentMode)
+      return "IE"; // IE < 11
+    return "Unknown";
+  }
+
+  function getBrowserVersion() {
+    // Simple browser version detection logic
+    return navigator.userAgent.match(
+      /(Chrome|Safari|Firefox|MSIE|Trident\/.*?rv:)(\d+)/
+    )[2];
+  }
+
+  function getDeviceType() {
+    const ua = navigator.userAgent;
+    if (/Mobile|Android|iP(ad|hone)/.test(ua)) return "Mobile";
+    return "Desktop";
+  }
+
+  let startTime = Date.now();
+  window.addEventListener("beforeunload", function () {
+    const payload = {
+      url: window.location.href,
+      referrer: document.referrer,
+      userAgent: navigator.userAgent,
+      timestamp: new Date().toISOString(),
+      sessionId: getSessionId(),
+      visitDuration: (Date.now() - startTime) / 1000, // Duration in seconds
+      browser: {
+        name: getBrowserName(),
+        version: getBrowserVersion(),
+      },
+      device: getDeviceType(),
+      interactions: getInteractionsData(), // Capture interaction data
+    };
+
+    navigator.sendBeacon(
+      "https://sitetrace-api.sigve.dev/analytics",
+      JSON.stringify(payload)
+    );
+  });
+
+  sendAnalyticsData();
+})();
