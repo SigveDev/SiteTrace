@@ -51,8 +51,8 @@
         version: getBrowserVersion(),
       },
       device: getDeviceType(),
-      clicks: clickCount,
-      scrollDepth: maxScrollDepth,
+      clicks: Number(clickCount),
+      scrollDepth: Number(maxScrollDepth),
     };
 
     fetch("https://sitetrace-api.sigve.dev/analytics", {
@@ -125,8 +125,8 @@
         version: getBrowserVersion(),
       },
       device: getDeviceType(),
-      clicks: clickCount,
-      scrollDepth: maxScrollDepth,
+      clicks: Number(clickCount),
+      scrollDepth: Number(maxScrollDepth),
     };
 
     navigator.sendBeacon(
