@@ -38,6 +38,45 @@
     sessionStorage.setItem("maxScrollDepth", maxScrollDepth);
   });
 
+  // Event listeners for focus and blur
+  window.addEventListener("blur", () => {
+    data.focus = false;
+  });
+  window.addEventListener("focus", () => {
+    data.focus = true;
+  });
+
+  // Collect additional data points
+  function getScreenResolution() {
+    return `${window.screen.width}x${window.screen.height}`;
+  }
+
+  function getViewportSize() {
+    return `${window.innerWidth}x${window.innerHeight}`;
+  }
+
+  function getLoadTime() {
+    return (
+      window.performance.timing.domContentLoadedEventEnd -
+      window.performance.timing.navigationStart
+    );
+  }
+
+  function getNetworkInfo() {
+    if (navigator.connection) {
+      return {
+        effectiveType: navigator.connection.effectiveType,
+        downlink: navigator.connection.downlink,
+        rtt: navigator.connection.rtt,
+      };
+    }
+    return {
+      effectiveType: "unknown",
+      downlink: "unknown",
+      rtt: "unknown",
+    };
+  }
+
   function sendAnalyticsData() {
     const payload = {
       url: window.location.href,
@@ -53,9 +92,14 @@
       device: getDeviceType(),
       clicks: Number(clickCount),
       scrollDepth: Number(maxScrollDepth),
+      screenResolution: getScreenResolution(),
+      viewportSize: getViewportSize(),
+      loadTime: getLoadTime(),
+      network: getNetworkInfo(),
+      focus: document.hasFocus(),
     };
 
-    fetch("https://sitetrace-api.sigve.dev/analytics", {
+    fetch("http://localhost:3000/analytics", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -81,27 +125,22 @@
   }
 
   function getBrowserName() {
-    // Simple browser detection logic
     if (navigator.userAgent.indexOf("Chrome") !== -1) return "Chrome";
     if (navigator.userAgent.indexOf("Safari") !== -1) return "Safari";
     if (navigator.userAgent.indexOf("Firefox") !== -1) return "Firefox";
     if (navigator.userAgent.indexOf("MSIE") !== -1 || !!document.documentMode)
-      return "IE"; // IE < 11
+      return "IE";
     return "Unknown";
   }
 
   function getBrowserVersion() {
-    // Define the regular expression to match browser versions
     const userAgent = navigator.userAgent;
     const match = userAgent.match(
       /(Chrome|Safari|Firefox|MSIE|Trident\/.*?rv:)(\d+)/
     );
-
-    // Check if match is found and return the version
     if (match) {
       return match[2];
     } else {
-      // Return a default value or handle the case where the browser is not recognized
       return "Unknown";
     }
   }
@@ -127,10 +166,15 @@
       device: getDeviceType(),
       clicks: Number(clickCount),
       scrollDepth: Number(maxScrollDepth),
+      screenResolution: getScreenResolution(),
+      viewportSize: getViewportSize(),
+      loadTime: getLoadTime(),
+      network: getNetworkInfo(),
+      focus: document.hasFocus(),
     };
 
     navigator.sendBeacon(
-      "https://sitetrace-api.sigve.dev/analytics",
+      "http://localhost:3000/analytics",
       JSON.stringify(payload)
     );
   });
