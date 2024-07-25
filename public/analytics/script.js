@@ -2,7 +2,9 @@
   let clickCount = 0;
   let maxScrollDepth = 0;
   let startTime = Date.now();
+  let userConsent = false;
 
+  // Load initial state from sessionStorage if available
   if (sessionStorage.getItem("startTime")) {
     startTime = sessionStorage.getItem("startTime");
   } else {
@@ -36,14 +38,6 @@
       maxScrollDepth = scrollDepth;
     }
     sessionStorage.setItem("maxScrollDepth", maxScrollDepth);
-  });
-
-  // Event listeners for focus and blur
-  window.addEventListener("blur", () => {
-    data.focus = false;
-  });
-  window.addEventListener("focus", () => {
-    data.focus = true;
   });
 
   // Collect additional data points
@@ -82,28 +76,34 @@
   }
 
   function sendAnalyticsData() {
-    const payload = {
+    let payload = {
       url: window.location.href,
       referrer: document.referrer,
-      userAgent: navigator.userAgent,
-      timestamp: new Date().toISOString(),
       sessionId: getSessionId(),
-      visitDuration: Date.now() - startTime,
+      timestamp: new Date().toISOString(),
       browser: {
         name: getBrowserName(),
         version: getBrowserVersion(),
       },
-      device: getDeviceType(),
-      clicks: Number(clickCount),
-      scrollDepth: Number(maxScrollDepth),
-      screenResolution: getScreenResolution(),
-      viewportSize: getViewportSize(),
-      loadTime: getLoadTime(),
-      network: getNetworkInfo(),
-      focus: document.hasFocus(),
     };
 
-    fetch("http://localhost:3000/analytics", {
+    if (userConsent) {
+      payload = {
+        ...payload,
+        userAgent: navigator.userAgent,
+        visitDuration: Date.now() - startTime,
+        device: getDeviceType(),
+        clicks: Number(clickCount),
+        scrollDepth: Number(maxScrollDepth),
+        screenResolution: getScreenResolution(),
+        viewportSize: getViewportSize(),
+        loadTime: getLoadTime(),
+        network: getNetworkInfo(),
+        focus: document.hasFocus(),
+      };
+    }
+
+    fetch("https://sitetrace-api.sigve.dev/analytics", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -155,33 +155,33 @@
     return "Desktop";
   }
 
-  window.addEventListener("beforeunload", function () {
-    const payload = {
-      url: window.location.href,
-      referrer: document.referrer,
-      userAgent: navigator.userAgent,
-      timestamp: new Date().toISOString(),
-      sessionId: getSessionId(),
-      visitDuration: Date.now() - startTime,
-      browser: {
-        name: getBrowserName(),
-        version: getBrowserVersion(),
-      },
-      device: getDeviceType(),
-      clicks: Number(clickCount),
-      scrollDepth: Number(maxScrollDepth),
-      screenResolution: getScreenResolution(),
-      viewportSize: getViewportSize(),
-      loadTime: getLoadTime(),
-      network: getNetworkInfo(),
-      focus: document.hasFocus(),
-    };
+  function showConfirmationDialog() {
+    const dialog = document.getElementById("confirmation-dialog");
+    if (dialog) {
+      dialog.style.display = "block";
+    }
+  }
 
-    navigator.sendBeacon(
-      "http://localhost:3000/analytics",
-      JSON.stringify(payload)
-    );
+  function hideConfirmationDialog() {
+    const dialog = document.getElementById("confirmation-dialog");
+    if (dialog) {
+      dialog.style.display = "none";
+    }
+  }
+
+  window.handleConsent = function (consent) {
+    userConsent = consent;
+    hideConfirmationDialog();
+    sendAnalyticsData();
+  };
+
+  window.addEventListener("beforeunload", function (event) {
+    sendAnalyticsData();
   });
 
-  sendAnalyticsData();
+  // Set up interval to send data every 5 minutes
+  setInterval(sendAnalyticsData, 5 * 60 * 1000); // 5 minutes in milliseconds
+
+  // Show the confirmation dialog on page load
+  window.addEventListener("load", showConfirmationDialog);
 })();
