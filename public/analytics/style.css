@@ -1,20 +1,29 @@
 .confirmation-dialog {
   position: fixed;
   height: fit-content;
-  width: 20rem;
+  width: 25rem;
   bottom: 1rem;
-  left: 1rem;
   background-color: rgb(2 6 23);
   border: 1px solid rgb(30 41 59);
-  padding: 1.5rem;
-  border-radius: 5rem;
-  display: none; /* Initially hidden */
+  padding: 0.75rem;
+  border-radius: 20px;
+  display: block;
   z-index: 1000; /* Ensure it is above other elements */
+  transition: right 0.8s;
+}
+
+.hidden {
+  right: -25rem;
+}
+
+.show {
+  right: 1rem;
 }
 
 .confirmation-dialog p {
   margin: 0;
   padding: 0;
+  color: #f8fafc;
 }
 
 .confirmation-dialog-button-wrapper {
@@ -22,6 +31,7 @@
   justify-content: space-between;
   width: 100%;
   gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .confirmation-dialog button {

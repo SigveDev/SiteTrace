@@ -158,14 +158,16 @@
   function showConfirmationDialog() {
     const dialog = document.getElementById("confirmation-dialog");
     if (dialog) {
-      dialog.style.display = "block";
+      dialog.classList.add("show");
+      dialog.classList.remove("hidden");
     }
   }
 
   function hideConfirmationDialog() {
     const dialog = document.getElementById("confirmation-dialog");
     if (dialog) {
-      dialog.style.display = "none";
+      dialog.classList.add("hidden");
+      dialog.classList.remove("show");
     }
   }
 
