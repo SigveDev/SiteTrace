@@ -56,6 +56,10 @@
   }
 
   function getLoadTime() {
+    if (performance.getEntriesByType("navigation").length > 0) {
+      const navEntry = performance.getEntriesByType("navigation")[0];
+      return navEntry.domContentLoadedEventEnd - navEntry.startTime;
+    }
     return (
       window.performance.timing.domContentLoadedEventEnd -
       window.performance.timing.navigationStart
