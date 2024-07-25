@@ -1,5 +1,7 @@
 .confirmation-dialog {
   position: fixed;
+  height: fit-content;
+  width: 20rem;
   bottom: 1rem;
   left: 1rem;
   background-color: rgb(2 6 23);
