@@ -103,7 +103,7 @@
       };
     }
 
-    fetch("https://sitetrace-api.sigve.dev/analytics", {
+    fetch("http://localhost:3000/analytics", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
