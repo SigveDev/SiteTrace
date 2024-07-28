@@ -156,6 +156,13 @@
   }
 
   function showConfirmationDialog() {
+    if (
+      localStorage.getItem("userConsent") === "true" ||
+      sessionStorage.getItem("userConsent") === "false"
+    ) {
+      handleConsent(true);
+      return;
+    }
     const dialog = document.getElementById("confirmation-dialog");
     if (dialog) {
       dialog.classList.add("show");
@@ -175,6 +182,10 @@
     userConsent = consent;
     hideConfirmationDialog();
     sendAnalyticsData(true);
+    localStorage.setItem("userConsent", consent);
+    if (!consent) {
+      sessionStorage.setItem("userConsent", "false");
+    }
     clearInterval(intervalId);
     intervalId = setInterval(() => sendAnalyticsData(true), 5 * 60 * 1000);
   };
@@ -183,8 +194,14 @@
     sendAnalyticsData(userConsent);
   });
 
-  // Send limited data on page load
-  sendAnalyticsData(false);
+  if (
+    localStorage.getItem("userConsent") === "true" ||
+    sessionStorage.getItem("userConsent") === "false"
+  ) {
+    handleConsent(true);
+  } else {
+    sendAnalyticsData(false);
+  }
 
   // Set up interval to send limited data every 5 minutes
   let intervalId = setInterval(() => sendAnalyticsData(false), 5 * 60 * 1000);
