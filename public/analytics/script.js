@@ -156,7 +156,6 @@
   }
 
   function showConfirmationDialog() {
-    console.log("Showing confirmation dialog");
     if (
       localStorage.getItem("userConsent") === "true" ||
       sessionStorage.getItem("userConsent") === "false"
@@ -164,13 +163,14 @@
       handleConsent(true);
       return;
     }
-    const dialog = document.getElementById("confirmation-dialog");
-    if (dialog) {
-      dialog.classList.add("show");
-      dialog.classList.remove("hidden");
-
-      console.log("Confirmation dialog shown");
-    }
+    const checkDialog = setInterval(() => {
+      const dialog = document.getElementById("confirmation-dialog");
+      if (dialog) {
+        dialog.classList.add("show");
+        dialog.classList.remove("hidden");
+        clearInterval(checkDialog);
+      }
+    }, 100); // Check every 100ms until the dialog is found
   }
 
   function hideConfirmationDialog() {
@@ -178,8 +178,6 @@
     if (dialog) {
       dialog.classList.add("hidden");
       dialog.classList.remove("show");
-
-      console.log("Confirmation dialog hidden");
     }
   }
 
