@@ -156,6 +156,7 @@
   }
 
   function showConfirmationDialog() {
+    console.log("Showing confirmation dialog");
     if (
       localStorage.getItem("userConsent") === "true" ||
       sessionStorage.getItem("userConsent") === "false"
