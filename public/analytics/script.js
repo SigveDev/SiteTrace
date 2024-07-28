@@ -197,6 +197,9 @@
     sendAnalyticsData(userConsent);
   });
 
+  // Set up interval to send limited data every 5 minutes
+  let intervalId = setInterval(() => sendAnalyticsData(false), 5 * 60 * 1000);
+
   if (
     localStorage.getItem("userConsent") === "true" ||
     sessionStorage.getItem("userConsent") === "false"
@@ -205,9 +208,6 @@
   } else {
     sendAnalyticsData(false);
   }
-
-  // Set up interval to send limited data every 5 minutes
-  let intervalId = setInterval(() => sendAnalyticsData(false), 5 * 60 * 1000);
 
   // Show the confirmation dialog on page load
   window.addEventListener("load", showConfirmationDialog);
