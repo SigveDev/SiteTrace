@@ -75,7 +75,7 @@
     };
   }
 
-  function sendAnalyticsData() {
+  function sendAnalyticsData(isFullData = false) {
     let payload = {
       url: window.location.href,
       referrer: document.referrer,
@@ -87,7 +87,7 @@
       },
     };
 
-    if (userConsent) {
+    if (isFullData) {
       payload = {
         ...payload,
         userAgent: navigator.userAgent,
@@ -174,15 +174,20 @@
   window.handleConsent = function (consent) {
     userConsent = consent;
     hideConfirmationDialog();
-    sendAnalyticsData();
+    sendAnalyticsData(true);
+    clearInterval(intervalId);
+    intervalId = setInterval(() => sendAnalyticsData(true), 5 * 60 * 1000);
   };
 
   window.addEventListener("beforeunload", function (event) {
-    sendAnalyticsData();
+    sendAnalyticsData(userConsent);
   });
 
-  // Set up interval to send data every 5 minutes
-  setInterval(sendAnalyticsData, 5 * 60 * 1000); // 5 minutes in milliseconds
+  // Send limited data on page load
+  sendAnalyticsData(false);
+
+  // Set up interval to send limited data every 5 minutes
+  let intervalId = setInterval(() => sendAnalyticsData(false), 5 * 60 * 1000);
 
   // Show the confirmation dialog on page load
   window.addEventListener("load", showConfirmationDialog);
