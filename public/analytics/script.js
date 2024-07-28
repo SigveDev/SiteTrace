@@ -167,6 +167,8 @@
     if (dialog) {
       dialog.classList.add("show");
       dialog.classList.remove("hidden");
+
+      console.log("Confirmation dialog shown");
     }
   }
 
@@ -175,6 +177,8 @@
     if (dialog) {
       dialog.classList.add("hidden");
       dialog.classList.remove("show");
+
+      console.log("Confirmation dialog hidden");
     }
   }
 
