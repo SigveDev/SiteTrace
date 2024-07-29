@@ -34,7 +34,6 @@ const MainChart = ({ data }: MainChartProps) => {
     if (data) {
       const formattedData = FormatDataToViews(data);
       setChartData(formattedData);
-      console.log(formattedData);
     }
   }, [data]);
 
