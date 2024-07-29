@@ -33,6 +33,7 @@ import { useLocation } from "react-router-dom";
 import { getDataFromUrl } from "@/lib/appwrite";
 import { useQuery } from "@tanstack/react-query";
 import { Analytics } from "@/assets/types/analytics";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Home = () => {
   const [date, setDate] = React.useState<DateRange | undefined>({
@@ -115,18 +116,26 @@ const Home = () => {
           </CardHeader>
           <CardContent>
             <CardDescription>
-              {projectsData?.length}{" "}
-              <span className="text-sm text-slate-600">
-                (
-                {
-                  projectsData?.filter(
-                    (item: Analytics) =>
-                      new Date(item.$updatedAt).getTime() >
-                      new Date().getTime() - 24 * 60 * 60 * 1000
-                  ).length
-                }
-                )
-              </span>
+              {projectLoading ? (
+                <Skeleton className="w-2/5 h-5" />
+              ) : projectError ? (
+                "Error"
+              ) : (
+                <>
+                  {projectsData?.length}{" "}
+                  <span className="text-sm text-slate-600">
+                    (
+                    {
+                      projectsData?.filter(
+                        (item: Analytics) =>
+                          new Date(item.$updatedAt).getTime() >
+                          new Date().getTime() - 24 * 60 * 60 * 1000
+                      ).length
+                    }
+                    )
+                  </span>
+                </>
+              )}
             </CardDescription>
           </CardContent>
         </Card>
@@ -167,11 +176,25 @@ const Home = () => {
         </Card>
       </div>
       <div className="grid w-full grid-cols-3 grid-rows-3 gap-4 mt-6 mb-4 grow">
-        <MainChart data={projectsData as Analytics[]} />
-        <LiveUsers />
-        <ClicksChart />
-        <ReferrerChart />
-        <BrowserChart />
+        {projectLoading ? (
+          <>
+            <Skeleton className="w-full h-full col-span-2 row-span-2" />
+            <Skeleton className="w-full h-full col-span-1 row-span-2" />
+            <Skeleton className="w-full col-span-1 row-span-1 h-80" />
+            <Skeleton className="w-full col-span-1 row-span-1 h-80" />
+            <Skeleton className="w-full col-span-1 row-span-1 h-80" />
+          </>
+        ) : projectError ? (
+          <p className="text-red-500">Error loading projects</p>
+        ) : (
+          <>
+            <MainChart data={projectsData as Analytics[]} />
+            <LiveUsers />
+            <ClicksChart />
+            <ReferrerChart />
+            <BrowserChart />
+          </>
+        )}
       </div>
     </div>
   );
