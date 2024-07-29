@@ -59,7 +59,7 @@ const MainChart = ({ data }: MainChartProps) => {
               tickMargin={10}
               axisLine={false}
               angle={-45}
-              tickFormatter={(value) => value.slice(5, 10)}
+              tickFormatter={(value) => value.slice(0, 5).replace("-", ".")}
             />
             <YAxis
               tickLine={false}
