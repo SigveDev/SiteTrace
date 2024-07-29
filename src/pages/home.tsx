@@ -124,7 +124,7 @@ const Home = () => {
                 <>
                   {projectsData?.length}{" "}
                   <span className="text-sm text-slate-600">
-                    (
+                    (+
                     {
                       projectsData?.filter(
                         (item: Analytics) =>
