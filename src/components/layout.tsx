@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,59 +20,116 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { ChevronsUpDown } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import { getRegisteredUrls } from "@/lib/appwrite";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const [selectedProject, setSelectedProject] = useState("all");
+  const [selectedProject, setSelectedProject] = useState(() => {
+    const url = new URL(window.location.href);
+    return url.searchParams.get("project") || "all";
+  });
+  const {
+    isLoading: projectLoading,
+    data: projects,
+    isError: projectError,
+  } = useQuery({
+    queryKey: ["selectedProject"],
+    queryFn: () => getRegisteredUrls(),
+  });
+
+  useEffect(() => {
+    if (!projects) return;
+
+    if (!projects.find((project: any) => project.url === selectedProject)) {
+      setSelectedProject("all");
+
+      const url = new URL(window.location.href);
+      url.searchParams.delete("project");
+      window.history.pushState({}, "", url.toString());
+      window.dispatchEvent(new Event("popstate"));
+    } else {
+      const url = new URL(window.location.href);
+      url.searchParams.set("project", selectedProject);
+      window.history.pushState({}, "", url.toString());
+      window.dispatchEvent(new Event("popstate"));
+    }
+  }, [selectedProject]);
+
   return (
     <div className="flex flex-col w-full min-h-dvh">
       <header className="flex flex-row w-full gap-3 px-6 py-2 h-fit">
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button variant="outline">
-              All projects
-              <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>Projects</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuRadioGroup
-              value={selectedProject}
-              onValueChange={setSelectedProject}
-            >
-              <DropdownMenuRadioItem value="all">
-                All projects
-              </DropdownMenuRadioItem>
-              <Separator />
-              {/*Add more here with map function*/}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <a href="/">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Overview
-                </NavigationMenuLink>
-              </a>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <a href="/users">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Users
-                </NavigationMenuLink>
-              </a>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <a href="/docs">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Documentation
-                </NavigationMenuLink>
-              </a>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+        <div className="min-w-36 w-fit">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="flex flex-row items-center justify-between w-full"
+              >
+                {selectedProject === "all"
+                  ? "All projects"
+                  : projects?.find(
+                      (project: any) => project.url === selectedProject
+                    )?.name}
+                <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="min-w-36 w-fit">
+              <DropdownMenuLabel>Projects</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuRadioGroup
+                value={selectedProject}
+                onValueChange={setSelectedProject}
+              >
+                <DropdownMenuRadioItem value="all">
+                  All projects
+                </DropdownMenuRadioItem>
+                <Separator />
+                {projectLoading ? (
+                  <Skeleton className="w-full h-8" />
+                ) : projectError ? (
+                  <p className="text-red-500">Error loading projects</p>
+                ) : (
+                  projects?.map((project: any) => (
+                    <DropdownMenuRadioItem
+                      key={project.$id}
+                      value={project.url}
+                    >
+                      {project.name}
+                    </DropdownMenuRadioItem>
+                  ))
+                )}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div>
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <a href="/">
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Overview
+                  </NavigationMenuLink>
+                </a>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <a href="/users">
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Users
+                  </NavigationMenuLink>
+                </a>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <a href="/docs">
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Documentation
+                  </NavigationMenuLink>
+                </a>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
         <span className="grow"></span>
         <Avatar>
           <AvatarImage

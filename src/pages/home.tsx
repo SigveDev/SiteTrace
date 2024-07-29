@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { format, subDays } from "date-fns";
 import {
   Calendar as CalendarIcon,
@@ -29,12 +29,41 @@ import LiveUsers from "@/components/charts/live-users";
 import ClicksChart from "@/components/charts/clicks-chart";
 import ReferrerChart from "@/components/charts/referrer-chart";
 import BrowserChart from "@/components/charts/browser-chart";
+import { useLocation } from "react-router-dom";
+import { getDataFromUrl } from "@/lib/appwrite";
+import { useQuery } from "@tanstack/react-query";
+import { Analytics } from "@/assets/types/analytics";
 
 const Home = () => {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: subDays(new Date(), 14),
     to: new Date(),
   });
+  const [projectUrl, setProjectUrl] = React.useState<string | null>(null);
+  const {
+    isLoading: projectLoading,
+    data: projectsData,
+    isError: projectError,
+  } = useQuery<Analytics[]>({
+    queryKey: ["projectData", projectUrl],
+    queryFn: () =>
+      getDataFromUrl(projectUrl || "") as unknown as Promise<Analytics[]>,
+  });
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const url = new URL(window.location.href);
+      setProjectUrl(url.searchParams.get("project"));
+    };
+    handleUrlChange();
+
+    window.addEventListener("popstate", handleUrlChange);
+    return () => {
+      window.removeEventListener("popstate", handleUrlChange);
+    };
+  }, [location]);
+
   return (
     <div className="w-[95%] h-fit mt-8 flex flex-col">
       <div className="flex items-center justify-between w-full h-fit">
@@ -86,7 +115,18 @@ const Home = () => {
           </CardHeader>
           <CardContent>
             <CardDescription>
-              123 <span className="text-sm text-slate-600">(+20)</span>
+              {projectsData?.length}{" "}
+              <span className="text-sm text-slate-600">
+                (
+                {
+                  projectsData?.filter(
+                    (item: Analytics) =>
+                      new Date(item.$updatedAt).getTime() >
+                      new Date().getTime() - 24 * 60 * 60 * 1000
+                  ).length
+                }
+                )
+              </span>
             </CardDescription>
           </CardContent>
         </Card>
@@ -127,7 +167,7 @@ const Home = () => {
         </Card>
       </div>
       <div className="grid w-full grid-cols-3 grid-rows-3 gap-4 mt-6 mb-4 grow">
-        <MainChart />
+        <MainChart data={projectsData as Analytics[]} />
         <LiveUsers />
         <ClicksChart />
         <ReferrerChart />

@@ -1,25 +1,15 @@
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { Card, CardContent, CardHeader } from "../ui/card";
-
-const chartData = [
-  { month: "24", views: 186 },
-  { month: "23", views: 305 },
-  { month: "22", views: 321 },
-  { month: "21", views: 245 },
-  { month: "20", views: 275 },
-  { month: "19", views: 285 },
-  { month: "18", views: 310 },
-  { month: "17", views: 234 },
-  { month: "16", views: 263 },
-  { month: "15", views: 287 },
-  { month: "14", views: 312 },
-  { month: "13", views: 291 },
-  { month: "12", views: 292 },
-  { month: "11", views: 310 },
-  { month: "10", views: 234 },
-];
+import { Analytics } from "@/assets/types/analytics";
+import { useEffect, useState } from "react";
+import FormatDataToViews from "@/assets/functions/formatDataToViews";
 
 const chartConfig = {
   views: {
@@ -28,7 +18,26 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const MainChart = () => {
+interface ChartdataType {
+  day: string;
+  views: number;
+}
+
+interface MainChartProps {
+  data: Analytics[];
+}
+
+const MainChart = ({ data }: MainChartProps) => {
+  const [chartData, setChartData] = useState<ChartdataType[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      const formattedData = FormatDataToViews(data);
+      setChartData(formattedData);
+      console.log(formattedData);
+    }
+  }, [data]);
+
   return (
     <Card className="col-span-2 row-span-2">
       <CardHeader>
@@ -36,14 +45,22 @@ const MainChart = () => {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="w-full h-[580px]">
-          <AreaChart data={chartData}>
+          <AreaChart
+            accessibilityLayer
+            data={chartData}
+            margin={{
+              bottom: 8,
+              right: 30,
+            }}
+          >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="day"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              angle={-45}
+              tickFormatter={(value) => value.slice(5, 10)}
             />
             <YAxis
               tickLine={false}
@@ -52,6 +69,10 @@ const MainChart = () => {
               tickFormatter={(value) =>
                 value > 1000 ? `${value / 1000}k` : value
               }
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent indicator="dot" />}
             />
             <Area
               dataKey="views"
