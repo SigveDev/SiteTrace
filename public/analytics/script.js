@@ -119,8 +119,10 @@
         userAgent: navigator.userAgent,
         visitDuration: Date.now() - startTime,
         device: getDeviceType(),
-        clicks: Number(clickCount),
-        scrollDepth: Number(maxScrollDepth),
+        clicks: Number(clickCount - sessionStorage.getItem("sendtClicks")),
+        scrollDepth: Number(
+          maxScrollDepth - sessionStorage.getItem("sendtScrollDepth")
+        ),
         screenResolution: getScreenResolution(),
         viewportSize: getViewportSize(),
         loadTime: getLoadTime(),
@@ -143,6 +145,9 @@
       .catch((error) => {
         console.error("Error sending analytics data:", error);
       });
+
+    sessionStorage.setItem("sendtClicks", clickCount);
+    sessionStorage.setItem("sendtScrollDepth", maxScrollDepth);
   }
 
   function getSessionId() {
