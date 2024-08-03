@@ -233,7 +233,7 @@
     }
   }
 
-  window.handleConsent = function (consent) {
+  function handleConsent(consent) {
     userConsent = consent;
     hideConfirmationDialog();
     localStorage.setItem("userConsent", consent);
@@ -245,7 +245,7 @@
     sendAnalyticsData(consent);
     clearInterval(intervalId);
     intervalId = setInterval(() => sendAnalyticsData(consent), 5 * 60 * 1000);
-  };
+  }
 
   window.addEventListener("beforeunload", function (event) {
     sendAnalyticsData(userConsent);
