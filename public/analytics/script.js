@@ -114,8 +114,8 @@
     };
 
     if (isFullData) {
-      if (sessionStorage.getItem("removedOldDevice") === "false") {
-        sessionStorage.setItem("removedOldDevice", "true");
+      if (sessionStorage.getItem("removedOldDevice")) {
+        sessionStorage.removeItem("removedOldDevice");
         payload = {
           ...payload,
           userAgent: navigator.userAgent,
