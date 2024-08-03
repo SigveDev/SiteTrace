@@ -115,6 +115,7 @@
 
     if (isFullData) {
       if (sessionStorage.getItem("removedOldDevice") === "false") {
+        sessionStorage.setItem("removedOldDevice", "true");
         payload = {
           ...payload,
           userAgent: navigator.userAgent,
@@ -131,7 +132,6 @@
           focus: document.hasFocus(),
           removeOneFromUnknownDevice: true,
         };
-        sessionStorage.setItem("removedOldDevice", "true");
       } else {
         payload = {
           ...payload,
