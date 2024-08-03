@@ -115,7 +115,6 @@
 
     if (isFullData) {
       if (sessionStorage.getItem("removedOldDevice")) {
-        sessionStorage.removeItem("removedOldDevice");
         payload = {
           ...payload,
           userAgent: navigator.userAgent,
@@ -150,6 +149,7 @@
         };
       }
     }
+    sessionStorage.removeItem("removedOldDevice");
 
     fetch("https://sitetrace-api.sigve.dev/analytics", {
       method: "POST",
@@ -226,6 +226,7 @@
 
   function hideConfirmationDialog() {
     const dialog = document.getElementById("confirmation-dialog");
+    sessionStorage.setItem("removedOldDevice", "false");
     if (dialog) {
       dialog.classList.add("hidden");
       dialog.classList.remove("show");
@@ -235,7 +236,6 @@
   window.handleConsent = function (consent) {
     userConsent = consent;
     hideConfirmationDialog();
-    sessionStorage.setItem("removedOldDevice", "false");
     sendAnalyticsData(consent);
     localStorage.setItem("userConsent", consent);
     if (!consent) {
