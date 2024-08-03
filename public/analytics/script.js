@@ -164,13 +164,12 @@
           firstTime = false;
           showConfirmationDialog();
         }
+        sessionStorage.setItem("sendtClicks", clickCount);
+        sessionStorage.setItem("sendtScrollDepth", maxScrollDepth);
       })
       .catch((error) => {
         console.error("Error sending analytics data:", error);
       });
-
-    sessionStorage.setItem("sendtClicks", clickCount);
-    sessionStorage.setItem("sendtScrollDepth", maxScrollDepth);
   }
 
   function getSessionId() {
