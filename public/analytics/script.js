@@ -114,6 +114,7 @@
     };
 
     if (isFullData) {
+      console.log(sessionStorage.getItem("removedOldDevice"));
       if (sessionStorage.getItem("removedOldDevice")) {
         payload = {
           ...payload,
