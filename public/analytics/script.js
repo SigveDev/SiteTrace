@@ -236,13 +236,13 @@
     userConsent = consent;
     hideConfirmationDialog();
     sessionStorage.setItem("removedOldDevice", "false");
-    sendAnalyticsData(true);
+    sendAnalyticsData(consent);
     localStorage.setItem("userConsent", consent);
     if (!consent) {
       sessionStorage.setItem("userConsent", "false");
     }
     clearInterval(intervalId);
-    intervalId = setInterval(() => sendAnalyticsData(true), 5 * 60 * 1000);
+    intervalId = setInterval(() => sendAnalyticsData(consent), 5 * 60 * 1000);
   };
 
   window.addEventListener("beforeunload", function (event) {
