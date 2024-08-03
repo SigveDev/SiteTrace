@@ -114,21 +114,41 @@
     };
 
     if (isFullData) {
-      payload = {
-        ...payload,
-        userAgent: navigator.userAgent,
-        visitDuration: Date.now() - startTime,
-        device: getDeviceType(),
-        clicks: Number(clickCount - sessionStorage.getItem("sendtClicks")),
-        scrollDepth: Number(
-          maxScrollDepth - sessionStorage.getItem("sendtScrollDepth")
-        ),
-        screenResolution: getScreenResolution(),
-        viewportSize: getViewportSize(),
-        loadTime: getLoadTime(),
-        network: getNetworkInfo(),
-        focus: document.hasFocus(),
-      };
+      if (sessionStorage.getItem("removedOldDevice") === "false") {
+        payload = {
+          ...payload,
+          userAgent: navigator.userAgent,
+          visitDuration: Date.now() - startTime,
+          device: getDeviceType(),
+          clicks: Number(clickCount - sessionStorage.getItem("sendtClicks")),
+          scrollDepth: Number(
+            maxScrollDepth - sessionStorage.getItem("sendtScrollDepth")
+          ),
+          screenResolution: getScreenResolution(),
+          viewportSize: getViewportSize(),
+          loadTime: getLoadTime(),
+          network: getNetworkInfo(),
+          focus: document.hasFocus(),
+          removeOneFromUnknownDevice: true,
+        };
+        sessionStorage.setItem("removedOldDevice", "true");
+      } else {
+        payload = {
+          ...payload,
+          userAgent: navigator.userAgent,
+          visitDuration: Date.now() - startTime,
+          device: getDeviceType(),
+          clicks: Number(clickCount - sessionStorage.getItem("sendtClicks")),
+          scrollDepth: Number(
+            maxScrollDepth - sessionStorage.getItem("sendtScrollDepth")
+          ),
+          screenResolution: getScreenResolution(),
+          viewportSize: getViewportSize(),
+          loadTime: getLoadTime(),
+          network: getNetworkInfo(),
+          focus: document.hasFocus(),
+        };
+      }
     }
 
     fetch("https://sitetrace-api.sigve.dev/analytics", {
@@ -215,6 +235,7 @@
   window.handleConsent = function (consent) {
     userConsent = consent;
     hideConfirmationDialog();
+    sessionStorage.setItem("removedOldDevice", "false");
     sendAnalyticsData(true);
     localStorage.setItem("userConsent", consent);
     if (!consent) {
