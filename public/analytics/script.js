@@ -239,8 +239,6 @@
     localStorage.setItem("userConsent", consent);
     if (!consent) {
       sessionStorage.setItem("userConsent", "false");
-    } else {
-      sessionStorage.setItem("removedOldDevice", "false");
     }
     sendAnalyticsData(consent);
     clearInterval(intervalId);
@@ -258,7 +256,12 @@
     localStorage.getItem("userConsent") === "true" ||
     sessionStorage.getItem("userConsent") === "false"
   ) {
-    handleConsent(true);
+    userConsent = true;
+    hideConfirmationDialog();
+    sessionStorage.setItem("removedOldDevice", true);
+    sendAnalyticsData(true);
+    clearInterval(intervalId);
+    intervalId = setInterval(() => sendAnalyticsData(true), 5 * 60 * 1000);
   } else {
     sendAnalyticsData(false);
   }
