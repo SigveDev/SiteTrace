@@ -210,7 +210,7 @@
   function showConfirmationDialog() {
     if (
       localStorage.getItem("userConsent") === "true" ||
-      sessionStorage.getItem("userConsent") === "false"
+      sessionStorage.getItem("userConsent") === "true"
     ) {
       return;
     }
@@ -255,7 +255,7 @@
 
   if (
     localStorage.getItem("userConsent") === "true" ||
-    sessionStorage.getItem("userConsent") === "false"
+    sessionStorage.getItem("userConsent") === "true"
   ) {
     userConsent = true;
     hideConfirmationDialog();
