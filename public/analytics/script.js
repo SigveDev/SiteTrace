@@ -3,6 +3,7 @@
   let maxScrollDepth = 0;
   let startTime = Date.now();
   let userConsent = false;
+  let firstTime = true;
 
   // Load initial state from sessionStorage if available
   if (sessionStorage.getItem("startTime")) {
@@ -162,6 +163,10 @@
       .then((response) => response.json())
       .then((data) => {
         console.log("Analytics data sent:", data);
+        if (firstTime) {
+          firstTime = false;
+          showConfirmationDialog();
+        }
       })
       .catch((error) => {
         console.error("Error sending analytics data:", error);
@@ -265,7 +270,4 @@
   } else {
     sendAnalyticsData(false);
   }
-
-  // Show the confirmation dialog on page load
-  window.addEventListener("load", showConfirmationDialog);
 })();
