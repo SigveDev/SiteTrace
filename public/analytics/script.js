@@ -226,7 +226,6 @@
 
   function hideConfirmationDialog() {
     const dialog = document.getElementById("confirmation-dialog");
-    sessionStorage.setItem("removedOldDevice", "false");
     if (dialog) {
       dialog.classList.add("hidden");
       dialog.classList.remove("show");
@@ -236,11 +235,13 @@
   window.handleConsent = function (consent) {
     userConsent = consent;
     hideConfirmationDialog();
-    sendAnalyticsData(consent);
     localStorage.setItem("userConsent", consent);
     if (!consent) {
       sessionStorage.setItem("userConsent", "false");
+    } else {
+      sessionStorage.setItem("removedOldDevice", "false");
     }
+    sendAnalyticsData(consent);
     clearInterval(intervalId);
     intervalId = setInterval(() => sendAnalyticsData(consent), 5 * 60 * 1000);
   };
