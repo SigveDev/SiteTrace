@@ -115,7 +115,6 @@
     };
 
     if (isFullData) {
-      console.log(sessionStorage.getItem("removedOldDevice"));
       if (sessionStorage.getItem("removedOldDevice")) {
         payload = {
           ...payload,
@@ -160,9 +159,7 @@
       },
       body: JSON.stringify(payload),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Analytics data sent:", data);
+      .then(() => {
         if (firstTime) {
           firstTime = false;
           showConfirmationDialog();
