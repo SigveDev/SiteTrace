@@ -104,7 +104,7 @@
 
   function sendAnalyticsData(isFullData = false) {
     let payload = {
-      url: window.location.href,
+      url: new URL(window.location.href).origin,
       referrer: document.referrer,
       sessionId: getSessionId(),
       timestamp: toIsoString(new Date()),
