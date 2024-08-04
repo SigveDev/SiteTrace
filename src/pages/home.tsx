@@ -26,14 +26,18 @@ import {
 } from "@/components/ui/card";
 import MainChart from "@/components/charts/main-chart";
 import LiveUsers from "@/components/charts/live-users";
-import ClicksChart from "@/components/charts/clicks-chart";
+import InteractionsChart from "@/components/charts/interactions-chart";
 import ReferrerChart from "@/components/charts/referrer-chart";
 import BrowserChart from "@/components/charts/browser-chart";
 import { useLocation } from "react-router-dom";
 import { getDataFromUrl } from "@/lib/appwrite";
 import { useQuery } from "@tanstack/react-query";
-import { Analytics } from "@/assets/types/analytics";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  AnalyticsOverTime,
+  TotalAnalytics,
+} from "@/assets/types/totalAnalytics";
+import mergeAllDataFromTotalData from "@/assets/functions/mergeAllDataFromTotalData";
 
 const Home = () => {
   const [date, setDate] = React.useState<DateRange | undefined>({
@@ -41,14 +45,19 @@ const Home = () => {
     to: new Date(),
   });
   const [projectUrl, setProjectUrl] = React.useState<string | null>(null);
+  const [totalProjectData, setTotalProjectData] =
+    React.useState<TotalAnalytics>();
+  const [dataOverTime, setDataOverTime] = React.useState<AnalyticsOverTime[]>(
+    []
+  );
   const {
     isLoading: projectLoading,
     data: projectsData,
     isError: projectError,
-  } = useQuery<Analytics[]>({
+  } = useQuery<TotalAnalytics[]>({
     queryKey: ["projectData", projectUrl],
     queryFn: () =>
-      getDataFromUrl(projectUrl || "") as unknown as Promise<Analytics[]>,
+      getDataFromUrl(projectUrl || "") as unknown as Promise<TotalAnalytics[]>,
   });
   const location = useLocation();
 
@@ -64,6 +73,21 @@ const Home = () => {
       window.removeEventListener("popstate", handleUrlChange);
     };
   }, [location]);
+
+  useEffect(() => {
+    if (projectsData) {
+      setDataOverTime(
+        projectsData.map((project) => project.analyticsOverTime).flat()
+      );
+    }
+  }, [projectsData]);
+
+  useEffect(() => {
+    if (projectsData) {
+      const mergedData = mergeAllDataFromTotalData(projectsData);
+      setTotalProjectData(mergedData);
+    }
+  }, [projectsData]);
 
   return (
     <div className="w-[95%] h-fit mt-8 flex flex-col">
@@ -122,15 +146,15 @@ const Home = () => {
                 "Error"
               ) : (
                 <>
-                  {projectsData?.length}{" "}
+                  {totalProjectData?.views}{" "}
                   <span className="text-sm text-slate-600">
                     (+
                     {
-                      projectsData?.filter(
-                        (item: Analytics) =>
-                          new Date(item.$updatedAt).getTime() >
-                          new Date().getTime() - 24 * 60 * 60 * 1000
-                      ).length
+                      totalProjectData?.analyticsOverTime.sort(
+                        (a, b) =>
+                          new Date(b.datetime).getTime() -
+                          new Date(a.datetime).getTime()
+                      )[0].views
                     }
                     )
                   </span>
@@ -148,7 +172,26 @@ const Home = () => {
           </CardHeader>
           <CardContent>
             <CardDescription>
-              12 785 <span className="text-sm text-slate-600">(+185)</span>
+              {projectLoading ? (
+                <Skeleton className="w-2/5 h-5" />
+              ) : projectError ? (
+                "Error"
+              ) : (
+                <>
+                  {totalProjectData?.interactions}{" "}
+                  <span className="text-sm text-slate-600">
+                    (+
+                    {
+                      totalProjectData?.analyticsOverTime.sort(
+                        (a, b) =>
+                          new Date(b.datetime).getTime() -
+                          new Date(a.datetime).getTime()
+                      )[0].interactions
+                    }
+                    )
+                  </span>
+                </>
+              )}
             </CardDescription>
           </CardContent>
         </Card>
@@ -160,7 +203,19 @@ const Home = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <CardDescription>Chrome</CardDescription>
+            <CardDescription>
+              {projectLoading ? (
+                <Skeleton className="w-2/5 h-5" />
+              ) : projectError ? (
+                "Error"
+              ) : (
+                projectsData?.map((analytics) => {
+                  return analytics.topBrowser.sort(
+                    (a, b) => b.amount - a.amount
+                  )[0].name;
+                })[0]
+              )}
+            </CardDescription>
           </CardContent>
         </Card>
         <Card>
@@ -171,29 +226,43 @@ const Home = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <CardDescription>Desktop</CardDescription>
+            <CardDescription>
+              {projectLoading ? (
+                <Skeleton className="w-2/5 h-5" />
+              ) : projectError ? (
+                "Error"
+              ) : (
+                projectsData?.map((analytics) => {
+                  return analytics.topDevice.sort(
+                    (a, b) => b.amount - a.amount
+                  )[0].name;
+                })[0]
+              )}
+            </CardDescription>
           </CardContent>
         </Card>
       </div>
-      <div className="grid w-full grid-cols-3 grid-rows-3 gap-4 mt-6 mb-4 grow">
+      <div className="grid w-full grid-cols-10 grid-rows-3 gap-4 mt-6 mb-4 grow h-[1000px]">
         {projectLoading ? (
           <>
-            <Skeleton className="w-full h-full col-span-2 row-span-2" />
-            <Skeleton className="w-full h-full col-span-1 row-span-2" />
-            <Skeleton className="w-full col-span-1 row-span-1 h-80" />
-            <Skeleton className="w-full col-span-1 row-span-1 h-80" />
-            <Skeleton className="w-full col-span-1 row-span-1 h-80" />
+            <Skeleton className="w-full h-full col-span-7 row-span-2" />
+            <Skeleton className="w-full h-full col-span-3 row-span-2" />
+            <Skeleton className="w-full col-span-6 row-span-1 h-80" />
+            <Skeleton className="w-full col-span-2 row-span-1 h-80" />
+            <Skeleton className="w-full col-span-2 row-span-1 h-80" />
           </>
         ) : projectError ? (
           <p className="text-red-500">Error loading projects</p>
         ) : (
-          <>
-            <MainChart data={projectsData as Analytics[]} />
-            <LiveUsers />
-            <ClicksChart />
-            <ReferrerChart />
-            <BrowserChart />
-          </>
+          totalProjectData && (
+            <>
+              <MainChart data={dataOverTime} />
+              <LiveUsers url={projectUrl} />
+              <InteractionsChart data={dataOverTime} />
+              <ReferrerChart data={totalProjectData.topReferrer} />
+              <BrowserChart data={totalProjectData.topBrowser} />
+            </>
+          )
         )}
       </div>
     </div>

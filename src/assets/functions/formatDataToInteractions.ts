@@ -2,20 +2,20 @@ import { AnalyticsOverTime } from "../types/totalAnalytics";
 
 interface ChartdataType {
   day: string;
-  views: number;
+  interactions: number;
 }
 
-function FormatDataToViews(data: AnalyticsOverTime[]): ChartdataType[] {
+function FormatDataToInteractions(data: AnalyticsOverTime[]): ChartdataType[] {
   return data.reduce((acc: ChartdataType[], item: AnalyticsOverTime) => {
     const day = formatDate(item.datetime); // Format the date (DD-MM-YYYY)
     const existingEntry = acc.find((entry) => entry.day === day);
 
     if (existingEntry) {
-      existingEntry.views += item.views;
+      existingEntry.interactions += item.interactions;
     } else {
       acc.push({
         day: day,
-        views: item.views,
+        interactions: item.interactions,
       });
     }
 
@@ -31,4 +31,4 @@ function formatDate(date: string): string {
   return `${day}-${month}-${year}`;
 }
 
-export default FormatDataToViews;
+export default FormatDataToInteractions;

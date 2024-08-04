@@ -1,54 +1,54 @@
-import { AreaChart, Area, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Card, CardContent, CardHeader } from "../ui/card";
-import { useEffect, useState } from "react";
-import FormatDataToViews from "@/assets/functions/formatDataToViews";
 import { AnalyticsOverTime } from "@/assets/types/totalAnalytics";
+import { useState, useEffect } from "react";
+import FormatDataToInteractions from "@/assets/functions/formatDataToInteractions";
 
 const chartConfig = {
-  views: {
-    label: "Visitors",
+  clicks: {
+    label: "Clicks",
     color: "#2563eb",
   },
-} satisfies ChartConfig;
+} as ChartConfig;
 
 interface ChartdataType {
   day: string;
-  views: number;
+  interactions: number;
 }
 
-interface MainChartProps {
+interface InteractionsChartProps {
   data: AnalyticsOverTime[];
 }
 
-const MainChart = ({ data }: MainChartProps) => {
+const InteractionsChart = ({ data }: InteractionsChartProps) => {
   const [chartData, setChartData] = useState<ChartdataType[]>([]);
 
   useEffect(() => {
     if (data) {
-      const formattedData = FormatDataToViews(data);
+      const formattedData = FormatDataToInteractions(data);
       setChartData(formattedData);
     }
   }, [data]);
 
   return (
-    <Card className="col-span-7 row-span-2">
+    <Card className="col-span-6 row-span-1">
       <CardHeader>
-        <h2 className="text-lg font-semibold">Visitors</h2>
+        <h2 className="text-lg font-semibold">Interactions</h2>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="w-full h-[580px]">
-          <AreaChart
+        <ChartContainer config={chartConfig} className="w-full h-[230px]">
+          <BarChart
             accessibilityLayer
             data={chartData}
             margin={{
-              bottom: 16,
+              bottom: 8,
               right: 30,
             }}
           >
@@ -73,18 +73,16 @@ const MainChart = ({ data }: MainChartProps) => {
               cursor={false}
               content={<ChartTooltipContent indicator="dot" />}
             />
-            <Area
-              dataKey="views"
-              fill="var(--color-views)"
-              type="natural"
-              fillOpacity={0.4}
-              stroke="var(--color-views)"
+            <Bar
+              dataKey="interactions"
+              fill="var(--color-clicks)"
+              radius={[4, 4, 0, 0]}
             />
-          </AreaChart>
+          </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>
   );
 };
 
-export default MainChart;
+export default InteractionsChart;

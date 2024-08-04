@@ -1,77 +1,103 @@
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { getLiveAnalyticsDataFromUrl } from "@/lib/appwrite";
+import { Analytics } from "@/assets/types/analytics";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-const LiveUsers = () => {
+interface LiveUsersProps {
+  url: string | null;
+}
+
+const LiveUsers = ({ url }: LiveUsersProps) => {
+  const {
+    isLoading: liveuserLoading,
+    data: liveUserData,
+    isError: liveUserError,
+  } = useQuery<Analytics[]>({
+    queryKey: ["liveUserData", url],
+    queryFn: () =>
+      getLiveAnalyticsDataFromUrl(url) as unknown as Promise<Analytics[]>,
+    refetchInterval: 30000,
+  });
+
   return (
-    <Card className="col-span-1 row-span-2">
+    <Card className="col-span-3 row-span-2">
       <CardHeader>
         <h2 className="text-lg font-semibold">Live Users</h2>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col gap-3">
-          <div className="grid items-center justify-center grid-cols-12">
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            <div className="flex flex-col col-span-11 gap-2">
-              <span>Session: sess_jndsndka</span>
-              <p className="text-sm text-slate-600">Last contact: 2min</p>
-            </div>
-          </div>
-          <div className="grid items-center justify-center grid-cols-12">
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            <div className="flex flex-col col-span-11 gap-2">
-              <span>Session: sess_asindajs</span>
-              <p className="text-sm text-slate-600">Last contact: 4min</p>
-            </div>
-          </div>
-          <div className="grid items-center justify-center grid-cols-12">
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            <div className="flex flex-col col-span-11 gap-2">
-              <span>Session: sess_aosoojnda</span>
-              <p className="text-sm text-slate-600">Last contact: 5min</p>
-            </div>
-          </div>
-          <div className="grid items-center justify-center grid-cols-12">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <div className="flex flex-col col-span-11 gap-2">
-              <span>Session: sess_pasasxsx</span>
-              <p className="text-sm text-slate-600">Last contact: &gt;5min</p>
-            </div>
-          </div>
-          <div className="grid items-center justify-center grid-cols-12">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <div className="flex flex-col col-span-11 gap-2">
-              <span>Session: sess_qsuybdaa</span>
-              <p className="text-sm text-slate-600">Last contact: &gt;5min</p>
-            </div>
-          </div>
-          <div className="grid items-center justify-center grid-cols-12">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <div className="flex flex-col col-span-11 gap-2">
-              <span>Session: sess_a8syaxn</span>
-              <p className="text-sm text-slate-600">Last contact: &gt;5min</p>
-            </div>
-          </div>
-          <div className="grid items-center justify-center grid-cols-12">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <div className="flex flex-col col-span-11 gap-2">
-              <span>Session: sess_928sndq</span>
-              <p className="text-sm text-slate-600">Last contact: &gt;10min</p>
-            </div>
-          </div>
-          <div className="grid items-center justify-center grid-cols-12">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <div className="flex flex-col col-span-11 gap-2">
-              <span>Session: sess_8whqdsqs</span>
-              <p className="text-sm text-slate-600">Last contact: &gt;20min</p>
-            </div>
-          </div>
-          <div className="grid items-center justify-center grid-cols-12">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <div className="flex flex-col col-span-11 gap-2">
-              <span>Session: sess_98shqwqw</span>
-              <p className="text-sm text-slate-600">Last contact: &gt;30min</p>
-            </div>
-          </div>
-        </div>
+        <ScrollArea className="h-[560px]">
+          {liveuserLoading ? (
+            Array.from({ length: 11 }).map((_, index) => (
+              <div
+                className="grid items-center justify-center w-full grid-cols-12 mb-4"
+                key={index}
+              >
+                <Skeleton className="w-3 h-3 rounded-full" />
+                <div className="flex flex-col col-span-11 gap-2">
+                  <span>
+                    <Skeleton className="w-full h-4" />
+                  </span>
+                  <p className="text-sm text-slate-600">
+                    <Skeleton className="w-1/2 h-3" />
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : liveUserError ? (
+            <p className="text-red-500">Error loading live users</p>
+          ) : (
+            liveUserData?.map((analytics) => {
+              const lastContactms =
+                new Date().getTime() - new Date(analytics.timestamp).getTime();
+
+              const minutesSinceLastContact = Math.floor(
+                lastContactms / 1000 / 60
+              );
+
+              return (
+                <div
+                  key={analytics.sessionId}
+                  className="grid items-center justify-center grid-cols-12 mb-4"
+                >
+                  <div
+                    className={`w-3 h-3 rounded-full ${
+                      minutesSinceLastContact < 5
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                    }`}
+                  ></div>
+                  <div className="flex flex-col col-span-11 gap-2">
+                    <span>Session: {analytics.sessionId}</span>
+                    <p className="text-sm text-slate-600">
+                      Last contact:{" "}
+                      {minutesSinceLastContact < 1
+                        ? "Just now"
+                        : minutesSinceLastContact < 2
+                        ? "2min"
+                        : minutesSinceLastContact < 3
+                        ? "3min"
+                        : minutesSinceLastContact < 4
+                        ? "4min"
+                        : minutesSinceLastContact < 5
+                        ? "5min"
+                        : minutesSinceLastContact < 10
+                        ? "10min"
+                        : minutesSinceLastContact < 30
+                        ? "30min"
+                        : minutesSinceLastContact < 60
+                        ? "1h"
+                        : minutesSinceLastContact < 120
+                        ? "2h"
+                        : minutesSinceLastContact < 180 && "3h"}
+                    </p>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </ScrollArea>
       </CardContent>
     </Card>
   );

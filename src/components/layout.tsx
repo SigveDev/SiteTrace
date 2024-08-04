@@ -147,7 +147,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <footer className="w-full h-32">
         <div className="flex flex-col items-center justify-center w-full h-full gap-4">
           <p className="text-sm text-gray-500">
-            Created and maintained by Sigve Tomten
+            Created and maintained by Sigve Tomten / SigveDev
           </p>
           <div className="flex flex-row gap-4 w-fit">
             <a
