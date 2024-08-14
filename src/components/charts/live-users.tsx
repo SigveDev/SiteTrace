@@ -72,25 +72,23 @@ const LiveUsers = ({ url }: LiveUsersProps) => {
                     <span>Session: {analytics.sessionId}</span>
                     <p className="text-sm text-slate-600">
                       Last contact:{" "}
-                      {minutesSinceLastContact < 1
-                        ? "Just now"
-                        : minutesSinceLastContact < 2
-                        ? "2min"
-                        : minutesSinceLastContact < 3
-                        ? "3min"
-                        : minutesSinceLastContact < 4
-                        ? "4min"
-                        : minutesSinceLastContact < 5
-                        ? "5min"
-                        : minutesSinceLastContact < 10
-                        ? "10min"
-                        : minutesSinceLastContact < 30
-                        ? "30min"
-                        : minutesSinceLastContact < 60
-                        ? "1h"
-                        : minutesSinceLastContact < 120
-                        ? "2h"
-                        : minutesSinceLastContact < 180 && "3h"}
+                      {minutesSinceLastContact > 60 * 24
+                        ? `${Math.floor(
+                            minutesSinceLastContact / (60 * 24)
+                          )} day${
+                            Math.floor(minutesSinceLastContact / (60 * 24)) > 1
+                              ? "s"
+                              : ""
+                          } ago`
+                        : minutesSinceLastContact > 60
+                        ? `${Math.floor(minutesSinceLastContact / 60)} hour${
+                            Math.floor(minutesSinceLastContact / 60) > 1
+                              ? "s"
+                              : ""
+                          } ago`
+                        : `${minutesSinceLastContact} minute${
+                            minutesSinceLastContact > 1 ? "s" : ""
+                          } ago`}
                     </p>
                   </div>
                 </div>

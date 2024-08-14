@@ -76,7 +76,7 @@ const MainChart = ({ data }: MainChartProps) => {
             <Area
               dataKey="views"
               fill="var(--color-views)"
-              type="natural"
+              type="monotone"
               fillOpacity={0.4}
               stroke="var(--color-views)"
             />
