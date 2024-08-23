@@ -25,17 +25,19 @@ interface ChartdataType {
 
 interface MainChartProps {
   data: AnalyticsOverTime[];
+  startDate: Date;
+  endDate: Date;
 }
 
-const MainChart = ({ data }: MainChartProps) => {
+const MainChart = ({ data, startDate, endDate }: MainChartProps) => {
   const [chartData, setChartData] = useState<ChartdataType[]>([]);
 
   useEffect(() => {
-    if (data) {
-      const formattedData = FormatDataToViews(data);
+    if (data && startDate && endDate) {
+      const formattedData = FormatDataToViews(data, startDate, endDate);
       setChartData(formattedData);
     }
-  }, [data]);
+  }, [data, startDate, endDate]);
 
   return (
     <Card className="col-span-7 row-span-2">

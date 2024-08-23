@@ -1,5 +1,6 @@
 import { TopReferrer } from "@/assets/types/totalAnalytics";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface ReferrerChartProps {
   data: TopReferrer[];
@@ -12,21 +13,25 @@ const ReferrerChart = ({ data }: ReferrerChartProps) => {
         <h2 className="text-lg font-semibold">Top Referrers</h2>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col gap-3">
+        <ScrollArea className="h-[250px]">
           {data
             .sort((a, b) => b.amount - a.amount)
             .map((referrer, index) => (
               <div
                 key={index}
-                className="flex flex-row items-center justify-between"
+                className="flex flex-row items-center max-w-[90%] justify-between mb-3"
               >
                 <p className="text-base font-semibold">
-                  {referrer.name === "" ? "Unknown" : referrer.name}
+                  {referrer.name.length > 22
+                    ? `${referrer.name.slice(0, 22)}...`
+                    : referrer.name === ""
+                    ? "Unknown"
+                    : referrer.name}
                 </p>
                 <span className="text-sm font-bold">+{referrer.amount}</span>
               </div>
             ))}
-        </div>
+        </ScrollArea>
       </CardContent>
     </Card>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { format, subDays } from "date-fns";
+import { addDays, format, subDays } from "date-fns";
 import {
   Calendar as CalendarIcon,
   EyeIcon,
@@ -30,7 +30,7 @@ import InteractionsChart from "@/components/charts/interactions-chart";
 import ReferrerChart from "@/components/charts/referrer-chart";
 import BrowserChart from "@/components/charts/browser-chart";
 import { useLocation } from "react-router-dom";
-import { getDataFromUrl } from "@/lib/appwrite";
+import { getDataFromUrl, getDataFromUrlAndDate } from "@/lib/appwrite";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -42,7 +42,7 @@ import mergeAllDataFromTotalData from "@/assets/functions/mergeAllDataFromTotalD
 const Home = () => {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: subDays(new Date(), 14),
-    to: new Date(),
+    to: addDays(new Date(), 1),
   });
   const [projectUrl, setProjectUrl] = React.useState<string | null>(null);
   const [totalProjectData, setTotalProjectData] =
@@ -58,6 +58,19 @@ const Home = () => {
     queryKey: ["projectData", projectUrl],
     queryFn: () =>
       getDataFromUrl(projectUrl || "") as unknown as Promise<TotalAnalytics[]>,
+  });
+  const {
+    isLoading: dateDataLoading,
+    data: dateData,
+    isError: dateDataError,
+  } = useQuery({
+    queryKey: ["dateData", date, projectUrl],
+    queryFn: () =>
+      getDataFromUrlAndDate(
+        projectUrl || "",
+        date?.from ?? subDays(new Date(), 14),
+        date?.to ?? addDays(new Date(), 1)
+      ) as unknown as Promise<AnalyticsOverTime[]>,
   });
   const location = useLocation();
 
@@ -75,12 +88,10 @@ const Home = () => {
   }, [location]);
 
   useEffect(() => {
-    if (projectsData) {
-      setDataOverTime(
-        projectsData.map((project) => project.analyticsOverTime).flat()
-      );
+    if (dateData) {
+      setDataOverTime(dateData);
     }
-  }, [projectsData]);
+  }, [dateData]);
 
   useEffect(() => {
     if (projectsData) {
@@ -256,9 +267,33 @@ const Home = () => {
         ) : (
           totalProjectData && (
             <>
-              <MainChart data={dataOverTime} />
+              {dateDataLoading ? (
+                <>
+                  <Skeleton className="w-full h-full col-span-7 row-span-2" />
+                </>
+              ) : dateDataError ? (
+                <p className="text-red-500">Error loading date data</p>
+              ) : (
+                <MainChart
+                  data={dataOverTime}
+                  startDate={date?.from ?? subDays(new Date(), 14)}
+                  endDate={date?.to ?? addDays(new Date(), 1)}
+                />
+              )}
               <LiveUsers url={projectUrl} />
-              <InteractionsChart data={dataOverTime} />
+              {dateDataLoading ? (
+                <>
+                  <Skeleton className="w-full col-span-6 row-span-1 h-80" />
+                </>
+              ) : dateDataError ? (
+                <p className="text-red-500">Error loading date data</p>
+              ) : (
+                <InteractionsChart
+                  data={dataOverTime}
+                  startDate={date?.from ?? subDays(new Date(), 14)}
+                  endDate={date?.to ?? addDays(new Date(), 1)}
+                />
+              )}
               <ReferrerChart data={totalProjectData.topReferrer} />
               <BrowserChart data={totalProjectData.topBrowser} />
             </>

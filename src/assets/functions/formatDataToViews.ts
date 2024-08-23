@@ -9,7 +9,11 @@ interface ChartdataTypeWithDate extends ChartdataType {
   date: Date;
 }
 
-function FormatDataToViews(data: AnalyticsOverTime[]): ChartdataType[] {
+function FormatDataToViews(
+  data: AnalyticsOverTime[],
+  startDate: Date,
+  endDate: Date
+): ChartdataType[] {
   const formattedData = data.reduce(
     (acc: ChartdataTypeWithDate[], item: AnalyticsOverTime) => {
       const day = formatDate(item.datetime); // Format the date (DD-MM-YYYY)
@@ -29,12 +33,9 @@ function FormatDataToViews(data: AnalyticsOverTime[]): ChartdataType[] {
     },
     []
   );
-  const sortedData = formattedData.sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
-    return dateA.getTime() - dateB.getTime();
-  });
-  const allDates = fillMissingDates(sortedData);
+
+  const allDates = fillMissingDates(formattedData, startDate, endDate);
+
   const newFormattedData: ChartdataType[] = allDates.map((item) => {
     const { day, views } = item;
     return { day, views };
@@ -43,8 +44,11 @@ function FormatDataToViews(data: AnalyticsOverTime[]): ChartdataType[] {
   return newFormattedData;
 }
 
-function formatDate(date: string): string {
-  const parts = date.split("T")[0].split("-");
+function formatDate(date: string | Date): string {
+  const parts =
+    typeof date === "string"
+      ? date.split("T")[0].split("-")
+      : date.toISOString().split("T")[0].split("-");
   const day = parts[2];
   const month = parts[1];
   const year = parts[0];
@@ -52,17 +56,15 @@ function formatDate(date: string): string {
 }
 
 function fillMissingDates(
-  data: ChartdataTypeWithDate[]
+  data: ChartdataTypeWithDate[],
+  startDate: Date,
+  endDate: Date
 ): ChartdataTypeWithDate[] {
-  if (data.length === 0) return data;
-
   const result: ChartdataTypeWithDate[] = [];
-  const startDate = data[0].date;
-  const endDate = data[data.length - 1].date;
 
   let currentDate = new Date(startDate);
   while (currentDate <= endDate) {
-    const formattedDate = formatDate(currentDate.toISOString());
+    const formattedDate = formatDate(currentDate);
     const existingEntry = data.find((item) => item.day === formattedDate);
 
     if (existingEntry) {

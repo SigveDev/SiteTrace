@@ -25,17 +25,23 @@ interface ChartdataType {
 
 interface InteractionsChartProps {
   data: AnalyticsOverTime[];
+  startDate: Date;
+  endDate: Date;
 }
 
-const InteractionsChart = ({ data }: InteractionsChartProps) => {
+const InteractionsChart = ({
+  data,
+  startDate,
+  endDate,
+}: InteractionsChartProps) => {
   const [chartData, setChartData] = useState<ChartdataType[]>([]);
 
   useEffect(() => {
-    if (data) {
-      const formattedData = FormatDataToInteractions(data);
+    if (data && startDate && endDate) {
+      const formattedData = FormatDataToInteractions(data, startDate, endDate);
       setChartData(formattedData);
     }
-  }, [data]);
+  }, [data, startDate, endDate]);
 
   return (
     <Card className="col-span-6 row-span-1">
