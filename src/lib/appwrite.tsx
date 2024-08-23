@@ -40,6 +40,8 @@ export const getDataFromUrlAndDate = async (
   startDate: Date,
   endDate: Date
 ) => {
+  const dayAfterEndDate = new Date(endDate);
+  dayAfterEndDate.setDate(dayAfterEndDate.getDate() + 1);
   if (url !== "") {
     const totalResponse = await database.listDocuments(
       import.meta.env.VITE_APPWRITE_ADMIN_DB_ID || "",
@@ -56,7 +58,7 @@ export const getDataFromUrlAndDate = async (
       [
         Query.equal("analytics", [totalResponse.documents[0].$id]),
         Query.greaterThan("datetime", startDate.toDateString()),
-        Query.lessThan("datetime", endDate.toDateString()),
+        Query.lessThan("datetime", dayAfterEndDate.toDateString()),
       ]
     );
     overTimeDataTotal = overTimeResponse.documents;
@@ -68,7 +70,7 @@ export const getDataFromUrlAndDate = async (
           [
             Query.equal("analytics", [totalResponse.documents[0].$id]),
             Query.greaterThan("datetime", startDate.toDateString()),
-            Query.lessThan("datetime", endDate.toDateString()),
+            Query.lessThan("datetime", dayAfterEndDate.toDateString()),
             Query.limit(25),
             Query.offset(i),
           ]
@@ -86,7 +88,7 @@ export const getDataFromUrlAndDate = async (
       import.meta.env.VITE_ANALYTICSOVERTIME_COLLECTION_ID || "",
       [
         Query.greaterThan("datetime", startDate.toDateString()),
-        Query.lessThan("datetime", endDate.toDateString()),
+        Query.lessThan("datetime", dayAfterEndDate.toDateString()),
         Query.limit(25),
       ]
     );
@@ -98,7 +100,7 @@ export const getDataFromUrlAndDate = async (
           import.meta.env.VITE_ANALYTICSOVERTIME_COLLECTION_ID || "",
           [
             Query.greaterThan("datetime", startDate.toDateString()),
-            Query.lessThan("datetime", endDate.toDateString()),
+            Query.lessThan("datetime", dayAfterEndDate.toDateString()),
             Query.limit(25),
             Query.offset(i),
           ]

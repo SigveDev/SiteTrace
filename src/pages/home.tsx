@@ -42,7 +42,7 @@ import mergeAllDataFromTotalData from "@/assets/functions/mergeAllDataFromTotalD
 const Home = () => {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: subDays(new Date(), 14),
-    to: addDays(new Date(), 1),
+    to: new Date(),
   });
   const [projectUrl, setProjectUrl] = React.useState<string | null>(null);
   const [totalProjectData, setTotalProjectData] =
@@ -69,7 +69,7 @@ const Home = () => {
       getDataFromUrlAndDate(
         projectUrl || "",
         date?.from ?? subDays(new Date(), 14),
-        date?.to ?? addDays(new Date(), 1)
+        date?.to || new Date()
       ) as unknown as Promise<AnalyticsOverTime[]>,
   });
   const location = useLocation();
@@ -277,7 +277,7 @@ const Home = () => {
                 <MainChart
                   data={dataOverTime}
                   startDate={date?.from ?? subDays(new Date(), 14)}
-                  endDate={date?.to ?? addDays(new Date(), 1)}
+                  endDate={date?.to || new Date()}
                 />
               )}
               <LiveUsers url={projectUrl} />
@@ -291,7 +291,7 @@ const Home = () => {
                 <InteractionsChart
                   data={dataOverTime}
                   startDate={date?.from ?? subDays(new Date(), 14)}
-                  endDate={date?.to ?? addDays(new Date(), 1)}
+                  endDate={date?.to || new Date()}
                 />
               )}
               <ReferrerChart data={totalProjectData.topReferrer} />
