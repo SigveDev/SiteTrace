@@ -1,4 +1,5 @@
 import { Client, Databases, Query } from "appwrite";
+import { addDays } from "date-fns";
 
 const client = new Client();
 
@@ -40,8 +41,7 @@ export const getDataFromUrlAndDate = async (
   startDate: Date,
   endDate: Date
 ) => {
-  const dayAfterEndDate = new Date(endDate);
-  dayAfterEndDate.setDate(dayAfterEndDate.getDate() + 1);
+  const dayAfterEndDate = addDays(endDate, 1);
   if (url !== "") {
     const totalResponse = await database.listDocuments(
       import.meta.env.VITE_APPWRITE_ADMIN_DB_ID || "",
@@ -63,7 +63,7 @@ export const getDataFromUrlAndDate = async (
     );
     overTimeDataTotal = overTimeResponse.documents;
     if (overTimeResponse.total > overTimeResponse.documents.length) {
-      for (let i = 0; i < overTimeResponse.total; i += 25) {
+      for (let i = 25; i < overTimeResponse.total; i += 25) {
         const overTimeResponse = await database.listDocuments(
           import.meta.env.VITE_APPWRITE_ADMIN_DB_ID || "",
           import.meta.env.VITE_ANALYTICSOVERTIME_COLLECTION_ID || "",
@@ -94,7 +94,7 @@ export const getDataFromUrlAndDate = async (
     );
     overTimeDataTotal = overTimeResponse.documents;
     if (overTimeResponse.total > overTimeResponse.documents.length) {
-      for (let i = 0; i < overTimeResponse.total; i += 25) {
+      for (let i = 25; i < overTimeResponse.total; i += 25) {
         const overTimeResponse = await database.listDocuments(
           import.meta.env.VITE_APPWRITE_ADMIN_DB_ID || "",
           import.meta.env.VITE_ANALYTICSOVERTIME_COLLECTION_ID || "",

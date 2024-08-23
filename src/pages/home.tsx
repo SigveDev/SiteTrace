@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { addDays, format, subDays } from "date-fns";
+import { add, addDays, format, subDays, startOfDay } from "date-fns";
 import {
   Calendar as CalendarIcon,
   EyeIcon,
@@ -41,8 +41,8 @@ import mergeAllDataFromTotalData from "@/assets/functions/mergeAllDataFromTotalD
 
 const Home = () => {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: subDays(new Date(), 14),
-    to: new Date(),
+    from: startOfDay(subDays(new Date(), 14)),
+    to: startOfDay(new Date()),
   });
   const [projectUrl, setProjectUrl] = React.useState<string | null>(null);
   const [totalProjectData, setTotalProjectData] =
@@ -276,8 +276,12 @@ const Home = () => {
               ) : (
                 <MainChart
                   data={dataOverTime}
-                  startDate={date?.from ?? subDays(new Date(), 14)}
-                  endDate={date?.to || new Date()}
+                  startDate={date?.from ?? startOfDay(subDays(new Date(), 14))}
+                  endDate={
+                    date && date.to
+                      ? startOfDay(addDays(date.to, 1))
+                      : startOfDay(new Date())
+                  }
                 />
               )}
               <LiveUsers url={projectUrl} />
@@ -290,8 +294,12 @@ const Home = () => {
               ) : (
                 <InteractionsChart
                   data={dataOverTime}
-                  startDate={date?.from ?? subDays(new Date(), 14)}
-                  endDate={date?.to || new Date()}
+                  startDate={date?.from ?? startOfDay(subDays(new Date(), 14))}
+                  endDate={
+                    date && date.to
+                      ? startOfDay(addDays(date.to, 1))
+                      : startOfDay(new Date())
+                  }
                 />
               )}
               <ReferrerChart data={totalProjectData.topReferrer} />
