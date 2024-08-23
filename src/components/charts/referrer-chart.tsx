@@ -13,7 +13,7 @@ const ReferrerChart = ({ data }: ReferrerChartProps) => {
         <h2 className="text-lg font-semibold">Top Referrers</h2>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[250px]">
+        <ScrollArea className="h-[230px]">
           {data
             .sort((a, b) => b.amount - a.amount)
             .map((referrer, index) => (
