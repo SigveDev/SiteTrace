@@ -50,7 +50,7 @@ const Session = () => {
           <BreadcrumbItem>
             <BreadcrumbPage>
               {sessionLoading ? (
-                <Skeleton className="w-20 h-8" />
+                <Skeleton className="w-20 h-3" />
               ) : sessionError ? (
                 "Session"
               ) : (
@@ -70,11 +70,7 @@ const Session = () => {
           ) : (
             sessionData && (
               <img
-                src={`https://loremflickr.com/360/360/abstract?lock=${sessionData.sessionId
-                  .split("_")[1]
-                  .split("")
-                  .map(ConvertCharToNumber)
-                  .join("")}`}
+                src={`https://api.dicebear.com/9.x/rings/svg?seed=${sessionData.sessionId}&ringFive=full,eighth,half,quarter&ringFour=half,quarter,full,eighth&ringOne=half,quarter,full,eighth&ringThree=half,quarter,full,eighth&ringTwo=half,quarter,full,eighth`}
                 alt="Session Image"
                 className="w-full h-full rounded-full"
               />
@@ -84,7 +80,7 @@ const Session = () => {
         <div className="flex flex-col gap-2 grow">
           <h1 className="text-xl font-bold">Session Info </h1>
           {sessionLoading ? (
-            <Skeleton className="w-1/2 h-3" />
+            <Skeleton className="w-1/2 h-5" />
           ) : sessionError ? (
             "Error loading session data"
           ) : (
@@ -103,7 +99,7 @@ const Session = () => {
           </CardHeader>
           <CardContent>
             {sessionLoading ? (
-              <Skeleton className="w-full h-12" />
+              <Skeleton className="w-full h-32" />
             ) : sessionError ? (
               <p className="text-red-500">Error loading session data</p>
             ) : (
