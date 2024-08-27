@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { format } from "date-fns";
-import ConvertCharToNumber from "@/assets/functions/convertCharToNumber";
 import {
   Accordion,
   AccordionContent,
