@@ -135,3 +135,12 @@ export const getLiveAnalyticsDataFromUrl = async (url: string | null) => {
     return response.documents;
   }
 };
+
+export const getSessionDataFromId = async (id: string) => {
+  const response = await database.getDocument(
+    import.meta.env.VITE_APPWRITE_DEFAULT_DB_ID || "",
+    import.meta.env.VITE_APPWRITE_ANALYTICS_COLLECTION_ID || "",
+    id
+  );
+  return response;
+};

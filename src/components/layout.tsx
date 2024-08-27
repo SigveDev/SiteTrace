@@ -114,9 +114,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 </a>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <a href="/users">
+                <a href="/sessions">
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Users
+                    Sessions
                   </NavigationMenuLink>
                 </a>
               </NavigationMenuItem>

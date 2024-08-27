@@ -6,6 +6,7 @@ import {
   MousePointer,
   Globe,
   TabletSmartphoneIcon,
+  Info,
 } from "lucide-react";
 import { DateRange } from "react-day-picker";
 
@@ -24,6 +25,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import MainChart from "@/components/charts/main-chart";
 import LiveUsers from "@/components/charts/live-users";
 import InteractionsChart from "@/components/charts/interactions-chart";
@@ -154,19 +160,17 @@ const Home = () => {
               {projectLoading ? (
                 <Skeleton className="w-2/5 h-5" />
               ) : projectError ? (
-                "Error"
+                <p className="text-destructive">Error</p>
               ) : (
                 <>
                   {totalProjectData?.views}{" "}
                   <span className="text-sm text-slate-600">
                     (+
-                    {
-                      totalProjectData?.analyticsOverTime.sort(
-                        (a, b) =>
-                          new Date(b.datetime).getTime() -
-                          new Date(a.datetime).getTime()
-                      )[0].views
-                    }
+                    {dateData?.find(
+                      (data) =>
+                        startOfDay(new Date(data.datetime)).getTime() ===
+                        startOfDay(new Date()).getTime()
+                    )?.views ?? 0}
                     )
                   </span>
                 </>
@@ -176,7 +180,22 @@ const Home = () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-xl">Total Interactions</CardTitle>
+            <CardTitle className="flex flex-row text-xl">
+              Total Interactions
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <div className="flex items-center justify-center h-full ml-2">
+                    <Info className="w-5 h-5 mt-[5px] text-secondary" />
+                  </div>
+                </HoverCardTrigger>
+                <HoverCardContent>
+                  <p className="text-sm text-primary">
+                    Interactions isnt always tracked by default. Users must
+                    agree to share interaction data.
+                  </p>
+                </HoverCardContent>
+              </HoverCard>
+            </CardTitle>
             <CardDescription>
               <MousePointer className="w-5 h-5" />
             </CardDescription>
@@ -186,19 +205,17 @@ const Home = () => {
               {projectLoading ? (
                 <Skeleton className="w-2/5 h-5" />
               ) : projectError ? (
-                "Error"
+                <p className="text-destructive">Error</p>
               ) : (
                 <>
                   {totalProjectData?.interactions}{" "}
                   <span className="text-sm text-slate-600">
                     (+
-                    {
-                      totalProjectData?.analyticsOverTime.sort(
-                        (a, b) =>
-                          new Date(b.datetime).getTime() -
-                          new Date(a.datetime).getTime()
-                      )[0].interactions
-                    }
+                    {dateData?.find(
+                      (data) =>
+                        startOfDay(new Date(data.datetime)).getTime() ===
+                        startOfDay(new Date()).getTime()
+                    )?.interactions ?? 0}
                     )
                   </span>
                 </>
@@ -218,7 +235,7 @@ const Home = () => {
               {projectLoading ? (
                 <Skeleton className="w-2/5 h-5" />
               ) : projectError ? (
-                "Error"
+                <p className="text-destructive">Error</p>
               ) : (
                 projectsData?.map((analytics) => {
                   return analytics.topBrowser.sort(
@@ -241,7 +258,7 @@ const Home = () => {
               {projectLoading ? (
                 <Skeleton className="w-2/5 h-5" />
               ) : projectError ? (
-                "Error"
+                <p className="text-destructive">Error</p>
               ) : (
                 projectsData?.map((analytics) => {
                   return analytics.topDevice.sort(
@@ -263,7 +280,7 @@ const Home = () => {
             <Skeleton className="w-full col-span-2 row-span-1 h-80" />
           </>
         ) : projectError ? (
-          <p className="text-red-500">Error loading projects</p>
+          <p className="text-destructive">Error loading projects</p>
         ) : (
           totalProjectData && (
             <>
@@ -272,7 +289,7 @@ const Home = () => {
                   <Skeleton className="w-full h-full col-span-7 row-span-2" />
                 </>
               ) : dateDataError ? (
-                <p className="text-red-500">Error loading date data</p>
+                <p className="text-destructive">Error loading date data</p>
               ) : (
                 <MainChart
                   data={dataOverTime}
@@ -290,7 +307,7 @@ const Home = () => {
                   <Skeleton className="w-full col-span-6 row-span-1 h-80" />
                 </>
               ) : dateDataError ? (
-                <p className="text-red-500">Error loading date data</p>
+                <p className="text-destructive">Error loading date data</p>
               ) : (
                 <InteractionsChart
                   data={dataOverTime}
