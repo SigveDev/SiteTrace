@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Layout from "./components/layout";
 
 import Home from "./pages/home";
+import Sessions from "./pages/sessions";
 import Session from "./pages/session";
 
 const queryClient = new QueryClient();
@@ -16,6 +17,7 @@ const Router = () => {
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/sessions" element={<Sessions />} />
               <Route path="/session/:id" element={<Session />} />
             </Routes>
           </Layout>

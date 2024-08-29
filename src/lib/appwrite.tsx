@@ -144,3 +144,63 @@ export const getSessionDataFromId = async (id: string) => {
   );
   return response;
 };
+
+export const getSessionsDataWithOptions = async (
+  page: number,
+  pageSize: number,
+  sortId: string,
+  sort: "asc" | "desc",
+  url: string | null
+) => {
+  if (sort === "asc") {
+    if (url) {
+      const response = await database.listDocuments(
+        import.meta.env.VITE_APPWRITE_DEFAULT_DB_ID || "",
+        import.meta.env.VITE_APPWRITE_ANALYTICS_COLLECTION_ID || "",
+        [
+          Query.contains("url", [url]),
+          Query.limit(pageSize),
+          Query.offset(page * pageSize),
+          Query.orderAsc(sortId),
+        ]
+      );
+      return response;
+    } else {
+      const response = await database.listDocuments(
+        import.meta.env.VITE_APPWRITE_DEFAULT_DB_ID || "",
+        import.meta.env.VITE_APPWRITE_ANALYTICS_COLLECTION_ID || "",
+        [
+          Query.limit(pageSize),
+          Query.offset(page * pageSize),
+          Query.orderAsc(sortId),
+        ]
+      );
+      return response;
+    }
+  } else {
+    if (url) {
+      const response = await database.listDocuments(
+        import.meta.env.VITE_APPWRITE_DEFAULT_DB_ID || "",
+        import.meta.env.VITE_APPWRITE_ANALYTICS_COLLECTION_ID || "",
+        [
+          Query.contains("url", [url]),
+          Query.limit(pageSize),
+          Query.offset(page * pageSize),
+          Query.orderDesc(sortId),
+        ]
+      );
+      return response;
+    } else {
+      const response = await database.listDocuments(
+        import.meta.env.VITE_APPWRITE_DEFAULT_DB_ID || "",
+        import.meta.env.VITE_APPWRITE_ANALYTICS_COLLECTION_ID || "",
+        [
+          Query.limit(pageSize),
+          Query.offset(page * pageSize),
+          Query.orderDesc(sortId),
+        ]
+      );
+      return response;
+    }
+  }
+};

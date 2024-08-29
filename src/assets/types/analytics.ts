@@ -1,3 +1,8 @@
+export interface AnalyticsRequest {
+  documents: Analytics[];
+  total: number;
+}
+
 export interface Analytics {
   url: string;
   referrer: string;

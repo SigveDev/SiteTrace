@@ -39,10 +39,6 @@ const Session = () => {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/">Overview</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
             <BreadcrumbLink href="/sessions">Sessions</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />

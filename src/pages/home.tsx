@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { addDays, format, subDays, startOfDay } from "date-fns";
 import {
   Calendar as CalendarIcon,
@@ -46,16 +46,13 @@ import {
 import mergeAllDataFromTotalData from "@/assets/functions/mergeAllDataFromTotalData";
 
 const Home = () => {
-  const [date, setDate] = React.useState<DateRange | undefined>({
+  const [date, setDate] = useState<DateRange | undefined>({
     from: startOfDay(subDays(new Date(), 14)),
     to: startOfDay(new Date()),
   });
-  const [projectUrl, setProjectUrl] = React.useState<string | null>(null);
-  const [totalProjectData, setTotalProjectData] =
-    React.useState<TotalAnalytics>();
-  const [dataOverTime, setDataOverTime] = React.useState<AnalyticsOverTime[]>(
-    []
-  );
+  const [projectUrl, setProjectUrl] = useState<string | null>(null);
+  const [totalProjectData, setTotalProjectData] = useState<TotalAnalytics>();
+  const [dataOverTime, setDataOverTime] = useState<AnalyticsOverTime[]>([]);
   const {
     isLoading: projectLoading,
     data: projectsData,

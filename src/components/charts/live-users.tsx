@@ -4,7 +4,7 @@ import { getLiveAnalyticsDataFromUrl } from "@/lib/appwrite";
 import { Analytics } from "@/assets/types/analytics";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { differenceInSeconds, formatDistance } from "date-fns";
+import { differenceInMinutes, formatDistance } from "date-fns";
 
 interface LiveUsersProps {
   url: string | null;
@@ -57,10 +57,10 @@ const LiveUsers = ({ url }: LiveUsersProps) => {
               >
                 <div
                   className={`w-3 h-3 rounded-full ${
-                    differenceInSeconds(
-                      new Date(analytics.timestamp),
-                      new Date()
-                    ) > 5
+                    differenceInMinutes(
+                      new Date(),
+                      new Date(analytics.timestamp)
+                    ) < 5
                       ? "bg-green-500"
                       : "bg-red-500"
                   }`}

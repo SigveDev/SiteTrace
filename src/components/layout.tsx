@@ -21,6 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { ChevronsUpDown } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useLocation } from "react-router-dom";
 
 import { getRegisteredUrls } from "@/lib/appwrite";
 
@@ -37,6 +38,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     queryKey: ["selectedProject"],
     queryFn: () => getRegisteredUrls(),
   });
+  const location = useLocation();
+  const currentSearchParams = location.search;
 
   useEffect(() => {
     if (!projects) return;
@@ -107,14 +110,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <a href="/">
+                <a href={`/${currentSearchParams}`}>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     Overview
                   </NavigationMenuLink>
                 </a>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <a href="/sessions">
+                <a href={`/sessions${currentSearchParams}`}>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     Sessions
                   </NavigationMenuLink>
