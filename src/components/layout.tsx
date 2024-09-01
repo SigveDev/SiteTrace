@@ -64,7 +64,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <div className="flex flex-col w-full min-h-dvh">
       <header className="flex flex-row w-full gap-3 px-6 py-2 h-14">
         <div className="flex-row hidden w-fit h-fit sm:flex">
-          <div className="min-w-36 w-fit">
+          <div className="mr-2 min-w-36 w-fit">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
