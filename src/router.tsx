@@ -6,6 +6,7 @@ import Layout from "./components/layout";
 import Home from "./pages/home";
 import Sessions from "./pages/sessions";
 import Session from "./pages/session";
+import Documentation from "./pages/documentation";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const Router = () => {
               <Route path="/" element={<Home />} />
               <Route path="/sessions" element={<Sessions />} />
               <Route path="/session/:id" element={<Session />} />
+              <Route path="/docs" element={<Documentation />} />
             </Routes>
           </Layout>
         </ThemeProvider>

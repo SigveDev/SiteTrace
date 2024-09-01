@@ -17,7 +17,6 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { ChevronsUpDown } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -134,13 +133,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </NavigationMenu>
         </div>
         <span className="grow"></span>
-        <Avatar>
-          <AvatarImage
-            src="https://avatars.githubusercontent.com/u/56192288?v=4"
-            alt="Avatar"
-          />
-          <AvatarFallback>ST</AvatarFallback>
-        </Avatar>
       </header>
       <Separator />
       <div className="flex flex-col items-center justify-start w-full grow">
