@@ -8,7 +8,7 @@ interface ReferrerChartProps {
 
 const ReferrerChart = ({ data }: ReferrerChartProps) => {
   return (
-    <Card className="col-span-2 row-span-1">
+    <Card className="col-span-1 row-span-1 md:col-span-3 lg:col-span-2">
       <CardHeader>
         <h2 className="text-lg font-semibold">Top Referrers</h2>
       </CardHeader>

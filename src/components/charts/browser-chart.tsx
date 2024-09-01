@@ -7,7 +7,7 @@ interface BrowserChartProps {
 
 const BrowserChart = ({ data }: BrowserChartProps) => {
   return (
-    <Card className="col-span-2 row-span-1">
+    <Card className="col-span-1 row-span-1 md:col-span-3 lg:col-span-2">
       <CardHeader>
         <h2 className="text-lg font-semibold">Top Browsers</h2>
       </CardHeader>

@@ -40,7 +40,7 @@ const MainChart = ({ data, startDate, endDate }: MainChartProps) => {
   }, [data, startDate, endDate]);
 
   return (
-    <Card className="col-span-7 row-span-2">
+    <Card className="col-span-1 row-span-2 md:col-span-6 lg:col-span-7">
       <CardHeader>
         <h2 className="text-lg font-semibold">Visitors</h2>
       </CardHeader>

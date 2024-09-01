@@ -13,8 +13,8 @@ const Documentation = () => {
       <div className="flex items-center justify-between w-full h-fit">
         <h1 className="text-4xl font-semibold">Documentation</h1>
       </div>
-      <div className="grid w-full h-full grid-cols-5 gap-2 mt-4 mb-8 grow">
-        <div className="col-span-1 h-fit">
+      <div className="grid w-full h-full grid-cols-1 gap-2 mt-4 mb-8 md:grid-cols-5 grow">
+        <div className="col-span-1 mb-12 h-fit sm:mb-0">
           <ScrollArea className="h-fit">
             <div className="flex flex-col gap-1 text-sm">
               <p className="text-base font-semibold">Getting Started</p>
@@ -41,6 +41,7 @@ const Documentation = () => {
               </a>
             </div>
           </ScrollArea>
+          <hr className="w-full h-[1px] bg-muted mt-4 block md:hidden" />
         </div>
         <div className="w-full h-full col-span-4">
           <div className="flex flex-col gap-4">

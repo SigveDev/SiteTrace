@@ -1,5 +1,6 @@
 import { DataTable } from "@/components/tables/sessions/data-table";
 import { columns } from "@/components/tables/sessions/columns";
+import { smallColumns } from "@/components/tables/sessions/small-columns";
 import { AnalyticsRequest } from "@/assets/types/analytics";
 import { useQuery } from "@tanstack/react-query";
 import { getSessionsDataWithOptions } from "@/lib/appwrite";
@@ -91,18 +92,36 @@ const Sessions = () => {
           <p className="text-destructive">Error loading sessions</p>
         ) : (
           sessionsData && (
-            <DataTable
-              columns={columns}
-              data={sessionsData.documents}
-              getRowLink={(row) => `/session/${row.$id}`}
-              sorting={sorting}
-              onSortingChange={handleSortingChange}
-              pageIndex={pageIndex}
-              pageSize={pageSize}
-              totalPages={Math.ceil(sessionsData.total / pageSize)}
-              onPageIndexChange={handlePageIndexChange}
-              onPageSizeChange={setPageSize}
-            />
+            <>
+              <div className="hidden sm:block">
+                <DataTable
+                  columns={columns}
+                  data={sessionsData.documents}
+                  getRowLink={(row) => `/session/${row.$id}`}
+                  sorting={sorting}
+                  onSortingChange={handleSortingChange}
+                  pageIndex={pageIndex}
+                  pageSize={pageSize}
+                  totalPages={Math.ceil(sessionsData.total / pageSize)}
+                  onPageIndexChange={handlePageIndexChange}
+                  onPageSizeChange={setPageSize}
+                />
+              </div>
+              <div className="block sm:hidden">
+                <DataTable
+                  columns={smallColumns}
+                  data={sessionsData.documents}
+                  getRowLink={(row) => `/session/${row.$id}`}
+                  sorting={sorting}
+                  onSortingChange={handleSortingChange}
+                  pageIndex={pageIndex}
+                  pageSize={pageSize}
+                  totalPages={Math.ceil(sessionsData.total / pageSize)}
+                  onPageIndexChange={handlePageIndexChange}
+                  onPageSizeChange={setPageSize}
+                />
+              </div>
+            </>
           )
         )}
       </div>

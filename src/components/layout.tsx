@@ -9,6 +9,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import {
   NavigationMenu,
@@ -21,6 +22,7 @@ import { Separator } from "@/components/ui/separator";
 import { ChevronsUpDown } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLocation } from "react-router-dom";
+import { Menu } from "lucide-react";
 
 import { getRegisteredUrls } from "@/lib/appwrite";
 
@@ -60,52 +62,52 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="flex flex-col w-full min-h-dvh">
-      <header className="flex flex-row w-full gap-3 px-6 py-2 h-fit">
-        <div className="min-w-36 w-fit">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="flex flex-row items-center justify-between w-full"
-              >
-                {selectedProject === "all"
-                  ? "All projects"
-                  : projects?.find(
-                      (project: any) => project.url === selectedProject
-                    )?.name}
-                <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="min-w-36 w-fit">
-              <DropdownMenuLabel>Projects</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup
-                value={selectedProject}
-                onValueChange={setSelectedProject}
-              >
-                <DropdownMenuRadioItem value="all">
-                  All projects
-                </DropdownMenuRadioItem>
-                <Separator />
-                {projectLoading ? (
-                  <Skeleton className="w-full h-8" />
-                ) : projectError ? (
-                  <p className="text-red-500">Error loading projects</p>
-                ) : (
-                  projects?.map((project: any) => (
-                    <DropdownMenuRadioItem
-                      key={project.$id}
-                      value={project.url}
-                    >
-                      {project.name}
-                    </DropdownMenuRadioItem>
-                  ))
-                )}
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        <div>
+      <header className="flex flex-row w-full gap-3 px-6 py-2 h-14">
+        <div className="flex-row hidden w-fit h-fit sm:flex">
+          <div className="min-w-36 w-fit">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="flex flex-row items-center justify-between w-full"
+                >
+                  {selectedProject === "all"
+                    ? "All projects"
+                    : projects?.find(
+                        (project: any) => project.url === selectedProject
+                      )?.name}
+                  <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="min-w-36 w-fit">
+                <DropdownMenuLabel>Projects</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup
+                  value={selectedProject}
+                  onValueChange={setSelectedProject}
+                >
+                  <DropdownMenuRadioItem value="all">
+                    All projects
+                  </DropdownMenuRadioItem>
+                  <Separator />
+                  {projectLoading ? (
+                    <Skeleton className="w-full h-8" />
+                  ) : projectError ? (
+                    <p className="text-red-500">Error loading projects</p>
+                  ) : (
+                    projects?.map((project: any) => (
+                      <DropdownMenuRadioItem
+                        key={project.$id}
+                        value={project.url}
+                      >
+                        {project.name}
+                      </DropdownMenuRadioItem>
+                    ))
+                  )}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -131,8 +133,77 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
+          <span className="hidden grow sm:block"></span>
         </div>
-        <span className="grow"></span>
+        <div className="flex flex-row w-full h-10 sm:hidden">
+          <div className="w-12">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="flex items-center justify-start h-full cursor-pointer aspect-square">
+                  <Menu className="w-7 h-7" />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="px-2 py-3 w-dvw">
+                <div className="min-w-36 w-fit">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="flex flex-row items-center justify-between w-full"
+                      >
+                        {selectedProject === "all"
+                          ? "All projects"
+                          : projects?.find(
+                              (project: any) => project.url === selectedProject
+                            )?.name}
+                        <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="min-w-36 w-fit">
+                      <DropdownMenuLabel>Projects</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuRadioGroup
+                        value={selectedProject}
+                        onValueChange={setSelectedProject}
+                      >
+                        <DropdownMenuRadioItem value="all">
+                          All projects
+                        </DropdownMenuRadioItem>
+                        <Separator />
+                        {projectLoading ? (
+                          <Skeleton className="w-full h-8" />
+                        ) : projectError ? (
+                          <p className="text-red-500">Error loading projects</p>
+                        ) : (
+                          projects?.map((project: any) => (
+                            <DropdownMenuRadioItem
+                              key={project.$id}
+                              value={project.url}
+                            >
+                              {project.name}
+                            </DropdownMenuRadioItem>
+                          ))
+                        )}
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                <DropdownMenuSeparator className="mt-4" />
+                <DropdownMenuLabel className="mb-2">Pages</DropdownMenuLabel>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <a href={`/${currentSearchParams}`}>Overview</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <a href={`/sessions${currentSearchParams}`}>Sessions</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <a href="/docs">Documentation</a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <div className="grow"></div>
+        </div>
       </header>
       <Separator />
       <div className="flex flex-col items-center justify-start w-full grow">

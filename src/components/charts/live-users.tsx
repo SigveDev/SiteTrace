@@ -23,7 +23,7 @@ const LiveUsers = ({ url }: LiveUsersProps) => {
   });
 
   return (
-    <Card className="col-span-3 row-span-2">
+    <Card className="col-span-1 row-span-2 md:col-span-6 lg:col-span-3">
       <CardHeader>
         <h2 className="text-lg font-semibold">Live Users</h2>
       </CardHeader>

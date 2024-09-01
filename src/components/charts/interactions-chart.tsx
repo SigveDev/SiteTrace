@@ -44,7 +44,7 @@ const InteractionsChart = ({
   }, [data, startDate, endDate]);
 
   return (
-    <Card className="col-span-6 row-span-1">
+    <Card className="col-span-1 row-span-1 md:col-span-6 lg:col-span-6">
       <CardHeader>
         <h2 className="text-lg font-semibold">Interactions</h2>
       </CardHeader>

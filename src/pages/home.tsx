@@ -105,7 +105,7 @@ const Home = () => {
 
   return (
     <div className="w-[95%] h-fit mt-8 flex flex-col">
-      <div className="flex items-center justify-between w-full h-fit">
+      <div className="flex flex-col items-start justify-between w-full gap-2 h-fit sm:flex-row sm:items-center">
         <h1 className="text-4xl font-semibold">Overview</h1>
         <Popover>
           <PopoverTrigger asChild>
@@ -144,7 +144,7 @@ const Home = () => {
           </PopoverContent>
         </Popover>
       </div>
-      <div className="grid w-full grid-cols-4 gap-3 mt-4 h-fit">
+      <div className="grid w-full grid-cols-1 gap-3 mt-4 sm:grid-cols-2 lg:grid-cols-4 h-fit">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-xl">Total Visitors</CardTitle>
@@ -267,14 +267,14 @@ const Home = () => {
           </CardContent>
         </Card>
       </div>
-      <div className="grid w-full grid-cols-10 grid-rows-3 gap-4 mt-6 mb-4 grow h-[1000px]">
+      <div className="grid w-full grid-cols-1 md:grid-cols-6 lg:grid-cols-10 gap-4 mt-6 mb-4 grow min-h-[1000px] h-fit">
         {projectLoading ? (
           <>
-            <Skeleton className="w-full h-full col-span-7 row-span-2" />
-            <Skeleton className="w-full h-full col-span-3 row-span-2" />
-            <Skeleton className="w-full col-span-6 row-span-1 h-80" />
-            <Skeleton className="w-full col-span-2 row-span-1 h-80" />
-            <Skeleton className="w-full col-span-2 row-span-1 h-80" />
+            <Skeleton className="w-full col-span-1 row-span-2 md:col-span-6 lg:col-span-7 h-[40rem]" />
+            <Skeleton className="w-full col-span-1 row-span-2 md:col-span-6 lg:col-span-3 h-[40rem]" />
+            <Skeleton className="w-full col-span-1 row-span-1 md:col-span-6 lg:col-span-6 h-80" />
+            <Skeleton className="w-full col-span-1 row-span-1 md:col-span-3 lg:col-span-2 h-80" />
+            <Skeleton className="w-full col-span-1 row-span-1 md:col-span-3 lg:col-span-2 h-80" />
           </>
         ) : projectError ? (
           <p className="text-destructive">Error loading projects</p>
