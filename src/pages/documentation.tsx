@@ -13,7 +13,7 @@ const Documentation = () => {
       <div className="flex items-center justify-between w-full h-fit">
         <h1 className="text-4xl font-semibold">Documentation</h1>
       </div>
-      <div className="grid w-full h-full grid-cols-5 gap-2 my-4 grow">
+      <div className="grid w-full h-full grid-cols-5 gap-2 mt-4 mb-8 grow">
         <div className="col-span-1 h-fit">
           <ScrollArea className="h-fit">
             <div className="flex flex-col gap-1 text-sm">
@@ -479,6 +479,14 @@ const Documentation = () => {
                   <AccordionContent>
                     Yes, Sitetrace is free to use as the code is opensource and
                     free to download from github.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="what-is-the-sitetrace-frontend-made-with">
+                  <AccordionTrigger>
+                    What is the Sitetrace frontend made with?
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    The frontend is built with Vite, Typeacript and TailwindCSS.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
