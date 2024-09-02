@@ -40,12 +40,15 @@ const MainChart = ({ data, startDate, endDate }: MainChartProps) => {
   }, [data, startDate, endDate]);
 
   return (
-    <Card className="col-span-1 row-span-2 md:col-span-6 lg:col-span-7">
+    <Card className="col-span-1 row-span-1 md:row-span-2 md:col-span-6 lg:col-span-7">
       <CardHeader>
         <h2 className="text-lg font-semibold">Visitors</h2>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="w-full h-[580px]">
+        <ChartContainer
+          config={chartConfig}
+          className="w-full h-[230px] md:h-[580px]"
+        >
           <AreaChart
             accessibilityLayer
             data={chartData}

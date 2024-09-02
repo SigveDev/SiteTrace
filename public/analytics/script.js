@@ -244,7 +244,7 @@
     }
     sendAnalyticsData(consent);
     clearInterval(intervalId);
-    intervalId = setInterval(() => sendAnalyticsData(consent), 5 * 60 * 1000);
+    intervalId = setInterval(() => sendAnalyticsData(consent), 2 * 60 * 1000);
   };
 
   window.addEventListener("beforeunload", function (event) {
@@ -252,7 +252,7 @@
   });
 
   // Set up interval to send limited data every 5 minutes
-  let intervalId = setInterval(() => sendAnalyticsData(false), 5 * 60 * 1000);
+  let intervalId = setInterval(() => sendAnalyticsData(false), 2 * 60 * 1000);
 
   if (
     localStorage.getItem("userConsent") === "true" ||
@@ -262,7 +262,7 @@
     hideConfirmationDialog();
     sendAnalyticsData(true);
     clearInterval(intervalId);
-    intervalId = setInterval(() => sendAnalyticsData(true), 5 * 60 * 1000);
+    intervalId = setInterval(() => sendAnalyticsData(true), 2 * 60 * 1000);
   } else {
     sendAnalyticsData(false);
   }
