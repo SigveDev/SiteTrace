@@ -4,7 +4,7 @@ import Prism from "prismjs";
 // Import the JSON language for highlighting
 import "prismjs/components/prism-json";
 // Import the Prism theme for styling
-import "prism-themes/themes/prism-atom-dark.css";
+import "prism-themes/themes/prism-vsc-dark-plus.css";
 
 interface CodeBlockProps {
   code: string;

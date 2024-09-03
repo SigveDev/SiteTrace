@@ -25,10 +25,10 @@ const Documentation = () => {
                 Introduction
               </a>
               <a
-                href="#how-to"
+                href="#get-started"
                 className="hover:underline text-muted-foreground"
               >
-                How to
+                Get started
               </a>
               <a
                 href="#examples"
@@ -85,8 +85,8 @@ const Documentation = () => {
                 </li>
               </ul>
             </section>
-            <section id="how-to">
-              <h2 className="text-2xl font-semibold">How to</h2>
+            <section id="get-started">
+              <h2 className="text-2xl font-semibold">Get started</h2>
               <p>
                 While Sitetrace is not available for public use, you can create
                 your own version by following these steps:
@@ -413,7 +413,7 @@ const Documentation = () => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Example</title>
-    <script src="https://sitetrace.sigve.dev/analytics/script.js"></script>
+    <script src="https://sitetrace.dev/analytics/script.js"></script>
 </head>
 <body>
     <!-- Your website content here -->
@@ -424,7 +424,7 @@ const Documentation = () => {
     <script>
       // Function to load HTML content
       function loadHTML() {
-        fetch("https://sitetrace.sigve.dev/analytics/index.html")
+        fetch("https://sitetrace.dev/analytics/index.html")
           .then((response) => response.text())
           .then((html) => {
             document.getElementById("confirmation-container").innerHTML = html;
@@ -438,7 +438,7 @@ const Documentation = () => {
       function loadCSS() {
         const link = document.createElement("link");
         link.rel = "stylesheet";
-        link.href = "https://sitetrace.sigve.dev/analytics/style.css";
+        link.href = "https://sitetrace.dev/analytics/style.css";
         document.head.appendChild(link);
       }
 

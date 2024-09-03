@@ -227,7 +227,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <a href="/docs">Documentation</a>
               </Button>
               <Button variant="outline" asChild>
-                <a href="/overview">Live Example</a>
+                <a href="/overview">Live Demo</a>
               </Button>
             </div>
           </>
