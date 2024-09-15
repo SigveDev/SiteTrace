@@ -241,7 +241,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <footer className="w-full h-48">
         <div className="flex flex-col items-center justify-center w-full h-full gap-4">
           <div className="flex flex-col items-center w-fit h-fit">
-            <h2 className="text-xl font-bold text-gray-500">Sitetrace</h2>
+            <h2 className="text-xl font-bold text-gray-500">Sitetrace v0.5</h2>
             <div className="flex flex-row gap-4 w-fit">
               <a
                 href="/docs"
